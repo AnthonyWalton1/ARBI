@@ -20,7 +20,7 @@
 class Hbridgepwm {
 public:
 Hbridgepwm(int pid_val);
-void begin(); // will set up the pwm pins for use
+int begin(int pwm,int IN_f, int IN_b); // will set up the pwm pins for use
 void set_pwm(int pid_val); // will set the correct pwm on the correct pin
 void hardwareprotect(int pid_val); // checks if a directional switch is about to occur and lets the inductor drain to prevent curernt spike. It also prevents temproary shorts de to swithcing speeds of the mosfets
 int status(int pid_val); // will return 0 for good or 1 for pid_val was not valid.
@@ -30,9 +30,9 @@ int _pid_val=5;
 int _pid_val_old=5;
 int _ERR=0;
 // the new h bridge component reuires different pinout
-int pwm=9;
-int IN_f=10;
-int IN_b=11;
+int _pwm=9;
+int _IN_f=10;
+int _IN_b=11;
 };
 
 #endif

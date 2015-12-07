@@ -5,12 +5,20 @@ Hbridgepwm::Hbridgepwm (int pid_val)
  _pid_val = pid_val; // this line of code may be unessary.
 }
 
-void Hbridgepwm::begin() 
+
+// change, begin function now updates the pin names so we can have mutiple classes and can adjust the pins that each class uses.
+ 
+int Hbridgepwm::begin(int pwm,int IN_f,int IN_b) 
 { // this sets up the pwm for use (provided correct hardware of course)
   // could beef up this function to allow the input pins to be changed.
- pinMode(pwm, OUTPUT);
- pinMode(IN_f, OUTPUT);
- pinMode(IN_b, OUTPUT);
+_pwm= pwm;
+_IN_f= IN_f;
+_IN_b= IN_b; // udate the local variables with the given ones.
+
+ pinMode(_pwm, OUTPUT);
+ pinMode(_IN_f, OUTPUT);
+ pinMode(_IN_b, OUTPUT);
+
 }
 
 void Hbridgepwm::hardwareprotect(int pid_val)
@@ -23,7 +31,7 @@ void Hbridgepwm::hardwareprotect(int pid_val)
     {
      // direction has changed from forward to backwards
      
-      digitalWrite(IN_f, LOW); // set p mosfet off to let n mosfet drain.
+      digitalWrite(_IN_f, LOW); // set p mosfet off to let n mosfet drain.
       delay(1*(abs(_pid_val - _pid_val_old))); // wait to let the inductive load drain, the faster motor was moving the greater amount of energy that needs to be drained.
       delay(100); // wait for the n2 fet to be fully off
       // all fets are of so it is good for set to turn them back on
@@ -35,7 +43,7 @@ void Hbridgepwm::hardwareprotect(int pid_val)
     if (_pid_val >0)
     {
      // direction has changed from backwards to forwards
-      digitalWrite(IN_b, LOW); // set p mosfet of let n mosfet drain.
+      digitalWrite(_IN_b, LOW); // set p mosfet of let n mosfet drain.
       delay(1*(abs(_pid_val_old - _pid_val))); // wait to let the inductive load drain.
       delay(100); // wait for n1 fet to be fully off.
      
@@ -55,23 +63,23 @@ void Hbridgepwm::set_pwm(int pid_val)
  { 
 
   // forward direction pmw
-  analogWrite(pwm, _pid_val);
-  digitalWrite(IN_f, HIGH);
-  digitalWrite(IN_b, LOW);
+  analogWrite(_pwm, _pid_val);
+  digitalWrite(_IN_f, HIGH);
+  digitalWrite(_IN_b, LOW);
  }
 else if (_pid_val<0)
 { 
   // backwards direction
-  analogWrite(pwm, abs(_pid_val));
-  digitalWrite(IN_b, HIGH);
-  digitalWrite(IN_f, LOW);
+  analogWrite(_pwm, abs(_pid_val));
+  digitalWrite(_IN_b, HIGH);
+  digitalWrite(_IN_f, LOW);
   // n1 is pulse and p2 is kept high as the n chanell mosfets have a faster switching speed.
 }
 else
 { // off case
-  digitalWrite(pwm, LOW);
-  digitalWrite(IN_f, LOW);
-  digitalWrite(IN_b, LOW);
+  digitalWrite(_pwm, LOW);
+  digitalWrite(_IN_f, LOW);
+  digitalWrite(_IN_b, LOW);
 }
 
 }

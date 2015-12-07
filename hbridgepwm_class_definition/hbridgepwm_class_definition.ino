@@ -44,7 +44,7 @@ Hbridgepwm PELT(1); // set up the pelt object for the hbridgepwm class
 
 void setup() {
   // put your setup code here, to run once:
-PELT.begin(); // set up the hardware for the temperature pelter.
+PELT.begin(11,4,7); // set up the hardware for the temperature pelter.
 // must have a large setup here for the temperature sensing device.
  // start serial port
   Serial.begin(9600);
@@ -123,8 +123,7 @@ PELT.begin(); // set up the hardware for the temperature pelter.
 void loop() {
   // put your main code here, to run repeatedly:
   
-PELT.hardwareprotect(250);
- PELT.set_pwm(250);
+
    // call sensors.requestTemperatures() to issue a global temperature 
   // request to all devices on the bus
   //  delay(10000); // added delay for temp measurements  
