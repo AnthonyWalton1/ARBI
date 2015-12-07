@@ -29,10 +29,10 @@ private:
 int _pid_val=5;
 int _pid_val_old=5;
 int _ERR=0;
-int p1=23;
-int p2=24;
-int n1=25;
-int n2=26;
+// the new h bridge component reuires different pinout
+int pwm=9;
+int IN_f=10;
+int IN_b=11;
 };
 
 #endif
