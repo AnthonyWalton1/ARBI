@@ -29,21 +29,16 @@ TCCR5B = TCCR5B & 0b11111000 | 0x01;
      TIMSK0 = (0<<OCIE0A) | (1<<TOIE0); // enable the timer interrupt for timer unit 1.
      TIMSK1 = _BV(TOIE1); // enable overflow as the type of interrupt used.
  
-// debug code
-analogWrite(2,150);
-analogWrite(3,150);
-analogWrite(4,150);
-analogWrite(5,150);
-analogWrite(6,150);
-analogWrite(7,150);
-analogWrite(8,150);
-analogWrite(9,150);
-analogWrite(10,150);
-analogWrite(11,150);
-analogWrite(12,150);
-Serial.begin(9600);
-// end debug code
+
+analogWrite(2,150); // led 1
+analogWrite(3,150); // led 2
+analogWrite(5,150); // led 3
+analogWrite(6,150); // led 4
+analogWrite(7,150); // led 5
+analogWrite(8,150); // led 6
 }
+
+
 void loop(){
  
 }
@@ -52,19 +47,19 @@ void loop(){
 ISR(TIMER1_OVF_vect){
 // this is the interrupt service routine function (note as an interrupt function it can only see global varables)
 Serial.print("h");
-if (state ==0){ // the pwm is off need to turn it on.
+if (state ==0){ // the pwm is off, turn it on.
 
   
-analogWrite(10,150); // turn it back on
+analogWrite(8,150); // turn it back on
 
 
 
 state =1;
 }
-else { // the pwm is on need to turn if off.
+else { // the pwm is on, turn it off.
 
   
-  digitalWrite(10,LOW);
+  digitalWrite(8,LOW);
 
 
   
