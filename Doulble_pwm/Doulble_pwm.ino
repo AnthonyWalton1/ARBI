@@ -4,7 +4,7 @@ volatile int state=0; // this variable is gloabl, must be placed before any func
 
 void setup() {
   // setup the timer registers in the mircoprocessor.
-TCCR1B = TCCR1B & 0b11111000 | 0x02;
+TCCR1B = TCCR1B & 0b11111000 | 0x03;
 TCCR2B = TCCR2B & 0b11111000 | 0x01;
 TCCR3B = TCCR3B & 0b11111000 | 0x01;
 TCCR4B = TCCR4B & 0b11111000 | 0x01;
@@ -50,7 +50,7 @@ Serial.print("h");
 if (state ==0){ // the pwm is off, turn it on.
 
   
-analogWrite(8,150); // turn it back on
+analogWrite(10,150); // turn it back on
 
 
 
@@ -59,7 +59,7 @@ state =1;
 else { // the pwm is on, turn it off.
 
   
-  digitalWrite(8,LOW);
+  digitalWrite(10,LOW);
 
 
   
