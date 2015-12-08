@@ -65,49 +65,23 @@ PELTo.begin(10,24,25);
 // must have a large setup here for the temperature sensing device.
  // start serial port
   Serial.begin(9600);
-  Serial.println("Algae Culture Box");
-
   // Start up the library
   sensors.begin();
 
   // locate devices on the bus
-  Serial.print("Locating devices...");
-  Serial.print("Found ");
-  Serial.print(sensors.getDeviceCount(), DEC);
-  Serial.println(" devices.");
-
-  // report parasite power requirements
-  Serial.print("Parasite power is: "); 
-  if (sensors.isParasitePowerMode()) Serial.println("ON");
-  else Serial.println("OFF");
+sensors.getDeviceCount();
 
   // Must be called before search()
   oneWire.reset_search();
   // assigns the first address found to insideThermometer
-  if (!oneWire.search(Address0)) Serial.println("Unable to find address for first Thermometer");
+  if (!oneWire.search(Address0)) 
   // assigns the second address found to middleThermometer
-  if (!oneWire.search(Address1)) Serial.println("Unable to find address for second Thermometer");
+  if (!oneWire.search(Address1)) 
   // assigns the third address found to outsideThermometer
-  if (!oneWire.search(Address2)) Serial.println("Unable to find address for third Thermometer");
+  if (!oneWire.search(Address2))
   // assigns the fourth address found to fourthThermometer
-  if (!oneWire.search(Address3)) Serial.println("Unable to find address for fourth Thermometer");
+  if (!oneWire.search(Address3))
   
-  // show the addresses we found on the bus. Update addresses for added devices.
-  Serial.print("Device 0 Address: ");
-//  printAddress(Address0);
-  Serial.println();
-
-  Serial.print("Device 1 Address: ");
-//  printAddress(Address1);
-  Serial.println();
-
-  Serial.print("Device 2 Address: ");
-//  printAddress(Address2);
-  Serial.println();
-
-  Serial.print("Device 3 Address: ");
-//  printAddress(Address3);
-  Serial.println();
 
   // set the resolution to 12 bit per device. 
   sensors.setResolution(Address0, TEMPERATURE_PRECISION);
@@ -115,21 +89,6 @@ PELTo.begin(10,24,25);
   sensors.setResolution(Address2, TEMPERATURE_PRECISION);
   sensors.setResolution(Address3, TEMPERATURE_PRECISION);
   
-  Serial.print("Device 0 Resolution: ");
-  Serial.print(sensors.getResolution(Address0), DEC); 
-  Serial.println();
-
-  Serial.print("Device 1 Resolution: ");
-  Serial.print(sensors.getResolution(Address1), DEC); 
-  Serial.println();
-
-  Serial.print("Device 2 Resolution: ");
-  Serial.print(sensors.getResolution(Address2), DEC); 
-  Serial.println();
-
-  Serial.print("Device 2 Resolution: ");
-  Serial.print(sensors.getResolution(Address3), DEC); 
-  Serial.println();
 
     //initialize the variables we're linked to
   sensors.requestTemperatures();
@@ -139,6 +98,15 @@ PELTo.begin(10,24,25);
   //turn the PID on
   myPID.SetMode(AUTOMATIC);
   myPIDo.SetMode(AUTOMATIC);
+
+  // set up the pwm pins for the 6 led's
+TCCR1B = TCCR1B & 0b11111000 | 0x03;
+TCCR2B = TCCR2B & 0b11111000 | 0x01;
+TCCR3B = TCCR3B & 0b11111000 | 0x01;
+TCCR4B = TCCR4B & 0b11111000 | 0x01;
+TCCR5B = TCCR5B & 0b11111000 | 0x01; //set up the frequency divider registers
+TIMSK0 = (0<<OCIE0A) | (1<<TOIE0); // enable the timer interrupt for timer unit 1.
+TIMSK1 = _BV(TOIE1); // enable overflow as the type of interrupt used.
   
 
 }
@@ -149,20 +117,8 @@ PELTo.begin(10,24,25);
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
-  // debug code
-  Serial.print("Requesting temperatures...");
-  delay(1000);
+ 
   sensors.requestTemperatures();
-  Serial.println("DONE");
-
-  // print the device information
-  printData(Address0);
-  printData(Address1); 
-  printData(Address2);
-  printData(Address3);
-
- // end debug code.
 
   
   // set variables including device information
@@ -173,40 +129,19 @@ void loop() {
 // PID one for pelter connected to ...
   Temp_Avg = Temp_0 + Temp_1;
   Input = 0.25 * Temp_Avg;
-  Serial.print("Average Temperature is ");
-  Serial.println(Input);
+
   myPID.Compute();
-  Serial.print("Temperatures difference is ");
-  Serial.println(Input-Setpoint);
-  Serial.print("Output value for H-Bridge is ");
-  Serial.println(Output);
   PELT.hardwareprotect(Output);
   PELT.set_pwm(Output);
   // end
 
-
 // PID two for pelter connected to ...
     Temp_Avg2 = Temp_2 + Temp_3;
   Input2 = 0.25 * Temp_Avg2;
-  Serial.print("Average Temperature 2 is ");
-  Serial.println(Input2);
   myPID.Compute();
-  Serial.print("Temperatures difference is ");
-  Serial.println(Input2-Setpoint2);
-  Serial.print("Output value for H-Bridge is ");
-  Serial.println(Output2);
   PELT.hardwareprotect(Output2);
   PELT.set_pwm(Output2);
 // end
-
-
-
-
-
-
-
-
-  
 }
 
 
