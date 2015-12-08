@@ -54,6 +54,16 @@ PID myPIDo(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
 volatile int frequency_divder =5; // this variable is used to give the output frequency of the first pwm layer by divideing the base output frequency (~2500 hz), note must be at least 3
 volatile int frequency_count =1; // this variable is compared against the above.
 volatile int state =1; // used to keep track of wheater the pwm is on or off. is set to one as it set on in the setupt function.
+
+
+// setup for the uart comuincation:
+// setup of serial communication between arduino and raspberry pi.
+String inputString = "";         // a string to hold incoming data
+boolean stringComplete = 0;  // whether the string is complete
+
+
+
+
 void setup() {
   // setup code
 PELT.begin(9,22,23); // set up the hardware for the temperature pelter.
@@ -115,6 +125,8 @@ analogWrite(6,150); // led 4
 analogWrite(7,150); // led 5
 analogWrite(8,150); // led 6
 
+
+
 }
 //************************************************************************************************************************
 // start of main loop
@@ -144,10 +156,12 @@ void loop() {
 // PID two for pelter connected to ...
     Temp_Avg2 = Temp_2 + Temp_3;
   Input2 = 0.25 * Temp_Avg2;
-  myPID.Compute();
-  PELT.hardwareprotect(Output2);
-  PELT.set_pwm(Output2);
+  myPIDo.Compute();
+  PELTo.hardwareprotect(Output2);
+  PELTo.set_pwm(Output2);
 // end
+
+// here we need to do serial communication work.
 
 }
 
@@ -234,6 +248,35 @@ digitalWrite(8,LOW); // turn the pwm back off and reset the count
   state =0;
   }
 } 
+}
+
+void serialEvent() {
+  // the serial events functions grabs all ascii character stored in the serial bufffer and gives it to a variable
+  while (Serial.available()) {
+    // get the new byte:
+    char inChar = (char)Serial.read();
+    // add it to the inputString:
+    inputString += inChar;
+    // if the incoming character is a newline, set a flag
+    // so the main loop can do something about it:
+    if (inChar == 91) { // this states the type of trailing null used.
+      stringComplete = 1;
+      // we have a complete message, need to do some work with this message.
+      recieve_uart ();
+    }
+  }
+}
+
+void recieve_uart (){
+// this function will only be called when we are given a completed strin, this functio'sn purpose is to trhow the string if it is bad and act upon the string if it is good. 
+// first test for possible ways the string is bad.
+// too long...
+if 
+
+
+
+
+  
 }
 
 
