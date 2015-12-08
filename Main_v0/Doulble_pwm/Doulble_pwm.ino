@@ -4,7 +4,7 @@ volatile int state=0; // this variable is gloabl, must be placed before any func
 
 void setup() {
   // setup the timer registers in the mircoprocessor.
-TCCR1B = TCCR1B & 0b11111000 | 0x03;
+TCCR1B = TCCR1B & 0b11111000 | 0x02;
 TCCR2B = TCCR2B & 0b11111000 | 0x01;
 TCCR3B = TCCR3B & 0b11111000 | 0x01;
 TCCR4B = TCCR4B & 0b11111000 | 0x01;
@@ -42,6 +42,12 @@ analogWrite(8,150); // led 6
 void loop(){
  
 }
+// we will alter this code so that we can put it into a class.
+// need to make it so that the second freqnecy is eaily changeable to a varrying number of values i.e 1000khz to 200khz or something if we want.
+
+
+
+
 
 
 ISR(TIMER1_OVF_vect){

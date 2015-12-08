@@ -51,8 +51,9 @@ float Temp_Avg = 0;
 float Temp_Avg2=0;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 PID myPIDo(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
-
-
+volatile int frequency_divder =5; // this variable is used to give the output frequency of the first pwm layer by divideing the base output frequency (~2500 hz), note must be at least 3
+volatile int frequency_count =1; // this variable is compared against the above.
+volatile int state =1; // used to keep track of wheater the pwm is on or off. is set to one as it set on in the setupt function.
 void setup() {
   // setup code
 PELT.begin(9,22,23); // set up the hardware for the temperature pelter.
@@ -99,15 +100,20 @@ sensors.getDeviceCount();
   myPID.SetMode(AUTOMATIC);
   myPIDo.SetMode(AUTOMATIC);
 
-  // set up the pwm pins for the 6 led's
-TCCR1B = TCCR1B & 0b11111000 | 0x03;
+// set up the pwm pins for the 6 led's
+TCCR1B = TCCR1B & 0b11111000 | 0x02;
 TCCR2B = TCCR2B & 0b11111000 | 0x01;
 TCCR3B = TCCR3B & 0b11111000 | 0x01;
 TCCR4B = TCCR4B & 0b11111000 | 0x01;
 TCCR5B = TCCR5B & 0b11111000 | 0x01; //set up the frequency divider registers
 TIMSK0 = (0<<OCIE0A) | (1<<TOIE0); // enable the timer interrupt for timer unit 1.
 TIMSK1 = _BV(TOIE1); // enable overflow as the type of interrupt used.
-  
+analogWrite(2,150); // led 1
+analogWrite(3,150); // led 2
+analogWrite(5,150); // led 3
+analogWrite(6,150); // led 4
+analogWrite(7,150); // led 5
+analogWrite(8,150); // led 6
 
 }
 //************************************************************************************************************************
@@ -142,6 +148,7 @@ void loop() {
   PELT.hardwareprotect(Output2);
   PELT.set_pwm(Output2);
 // end
+
 }
 
 
@@ -189,4 +196,44 @@ void printData(DeviceAddress deviceAddress)
   printTemperature(deviceAddress);
   Serial.println();
 }
+
+ISR(TIMER1_OVF_vect){
+// this is the interrupt service routine function (note as an interrupt function it can only see global varables)
+if (state ==0){ // the pwm is off, next must implement frequency divider
+if (frequency_divder != frequency_count){
+frequency_count = frequency_count +1; // update the count
+  
+}
+  else
+  {
+analogWrite(2,150); // led 1
+analogWrite(3,150); // led 2
+analogWrite(5,150); // led 3
+analogWrite(6,150); // led 4
+analogWrite(7,150); // led 5
+analogWrite(8,150); // led 6
+  frequency_count =1;  
+  state =1;
+  }
+}
+if (state ==1) { // the pwm is on, turn it off.
+if (frequency_divder != frequency_count){
+frequency_count = frequency_count +1; // update the count
+  
+}
+  else
+  {
+digitalWrite(2,LOW); // turn the pwm back off and reset the count
+digitalWrite(3,LOW); // turn the pwm back off and reset the count
+digitalWrite(5,LOW); // turn the pwm back off and reset the count
+digitalWrite(6,LOW); // turn the pwm back off and reset the count
+digitalWrite(7,LOW); // turn the pwm back off and reset the count
+digitalWrite(8,LOW); // turn the pwm back off and reset the count
+  
+  frequency_count =1;  
+  state =0;
+  }
+} 
+}
+
 
