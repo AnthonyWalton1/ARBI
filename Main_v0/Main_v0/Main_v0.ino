@@ -40,8 +40,8 @@ uint8_t Address_0, Address_1, Address_2, Address_3;
 Hbridgepwm PELT(1); // set up the pelt object to control pelter one 
 Hbridgepwm PELTo(2); // set up the pelt object to control pelter two
 //Define Variables we'll be connecting to
-double Setpoint, Input, Output;
-double Setpoint2, Input2, Output2;
+double Setpoint, Input, Output; // setpoint is the wanted temperature in degrees celcius 
+double Setpoint2, Input2, Output2; // setpoint 2 is the wanted temperature in degress celcius
 
 //Specify the links and initial tuning parameters
 double Kp=100, Ki=0.8, Kd=0.01;
@@ -58,17 +58,24 @@ volatile int state =1; // used to keep track of wheater the pwm is on or off. is
 
 // setup for the uart comuincation:
 // setup of serial communication between arduino and raspberry pi.
-String inputString = "";         // a string to hold incoming data
+String inputString;        // a string to hold incoming data
+String inputString2;
 boolean stringComplete = 0;  // whether the string is complete
-
-
+int variable_ID=0; // used to state which vairable the pi wishes to access
+int ID_1=0;
+int ID_2=0;
+int variable_value =0; 
+int vv_1=0;
+int vv_2=0;
+int vv_3=0;
 
 
 void setup() {
   // setup code
 PELT.begin(9,22,23); // set up the hardware for the temperature pelter.
 PELTo.begin(10,24,25);
-
+inputString.reserve(100);
+inputString2.reserve(100);
 
 
 
@@ -162,6 +169,36 @@ void loop() {
 // end
 
 // here we need to do serial communication work.
+// debug code
+inputString = "15_123";
+inputString2 = inputString;
+inputString2.toInt(); // convert it to an int
+  ID_1 =  inputString2[0]-48 ;
+  ID_2 =  inputString2[1]-48 ;
+variable_ID = (ID_1)*10 +ID_2 ;
+
+   vv_1 = inputString2[3]-48 ;
+   vv_2 = inputString2[4] -48 ;
+   vv_3 = inputString2[5] -48 ; // all the ascii values are converted to inetegrs.
+variable_value = (vv_1)*100 + (vv_2)*10 + (vv_3) ; // turned the ASCII three charcters into the actal number that they represent.
+Serial.print(variable_ID);
+Serial.print("\n");
+Serial.print(ID_1);
+Serial.print("\n");
+Serial.print(ID_2);
+Serial.print("\n");
+Serial.print(variable_value);
+Serial.print("\n");
+Serial.print(vv_1);
+Serial.print("\n");
+Serial.print(vv_2);
+Serial.print("\n");
+Serial.print(vv_3);
+Serial.print("\n");
+delay(10000);
+// end debug code.
+
+
 
 }
 
@@ -271,12 +308,44 @@ void recieve_uart (){
 // this function will only be called when we are given a completed strin, this functio'sn purpose is to trhow the string if it is bad and act upon the string if it is good. 
 // first test for possible ways the string is bad.
 // too long...
-if 
+if (inputString.length() != 6) // length does not include trailing null.
+{ // 9 is the length of all input strings so if not 9 is wrong
+inputString =""; // empty the string
+Serial.flush(); // remove all chars in the buffer as it is wrong.
+}
+else
+{
+// the string passed first test, next must pull out values and do work with them.
+// the setup of the string is (n_x\0) where n is variable number and x is variables value. 
+inputString.trim(); // remove the null.
+inputString2 = inputString;
+inputString = ""; // empty the string to recieve the next message.
+inputString2.toInt(); // convert it to an int
+
+  ID_1 =  inputString2[0]-48 ;
+  ID_2 =  inputString2[0]-48 ;
+variable_ID = (ID_1)*10 +ID_2 ;
+   vv_1 = inputString2[3]-48 ;
+   vv_2 = inputString2[4] -48 ;
+   vv_3 = inputString2[5] -48 ; // all the ascii values are converted to inetegrs.
+variable_value = (vv_1)*100 + (vv_2)*10 + (vv_3) ; // turned the ASCII three charcters into the actal number that they represent.
+
+//the code now gets the ID and value out as ints that can be used in a simple case statment.
+
+
+
+
 
 
 
 
   
 }
+
+}
+
+
+  
+
 
 
