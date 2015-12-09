@@ -11,50 +11,22 @@ Hbridgepwm::Hbridgepwm (int pid_val)
 
 // change, begin function now updates the pin names so we can have mutiple classes and can adjust the pins that each class uses.
  
-int Hbridgepwm::begin(int pwm,int IN_f,int IN_b) 
+int Hbridgepwm::begin(int pwm,int IN_f,int IN_b, int CS , int DIAGa, int DIAGb) 
 { // this sets up the pwm for use (provided correct hardware of course)
   // could beef up this function to allow the input pins to be changed.
 _pwm= pwm;
 _IN_f= IN_f;
 _IN_b= IN_b; // udate the local variables with the given ones.
-
+_CS =CS;
+_DIAGa =DIAGa; //error check pin 1
+_DIAGb = DIAGb; // error check pin 2
  pinMode(_pwm, OUTPUT);
  pinMode(_IN_f, OUTPUT);
  pinMode(_IN_b, OUTPUT);
-
-}
-
-void Hbridgepwm::hardwareprotect(int pid_val)
-{
-  _pid_val = pid_val; // so the value of the global variable is set to the local variable.
-// must check if are about to switch direction.
-  if (_pid_val_old >= 0)
-  {
-    if (_pid_val <0)
-    {
-     // direction has changed from forward to backwards
-     
-      digitalWrite(_IN_f, LOW); // set p mosfet off to let n mosfet drain.
-      delay(1*(abs(_pid_val - _pid_val_old))); // wait to let the inductive load drain, the faster motor was moving the greater amount of energy that needs to be drained.
-      delay(100); // wait for the n2 fet to be fully off
-      // all fets are of so it is good for set to turn them back on
-    }
-  }
-
-  if (_pid_val_old <= 0)
-  {
-    if (_pid_val >0)
-    {
-     // direction has changed from backwards to forwards
-      digitalWrite(_IN_b, LOW); // set p mosfet of let n mosfet drain.
-      delay(1*(abs(_pid_val_old - _pid_val))); // wait to let the inductive load drain.
-      delay(100); // wait for n1 fet to be fully off.
-     
-    }
-  }
-  // finished checking for a chnage in direction, update old value.
-_pid_val_old = _pid_val; 
-  
+ pinMode(CS, INPUT);
+ pinMode(_DIAGa, OUTPUT);
+ digitalWrite(_DIAGa, HIGH);
+ pinMode(_DIAGb, INPUT);
 }
 
 void Hbridgepwm::set_pwm(int pid_val)
@@ -90,7 +62,8 @@ else
 
 int Hbridgepwm::status(int pid_val)
 {
- _pid_val = pid_val; 
+_ERR =0; 
+ // first chech to see if were given valid pid value
 if (_pid_val > 255)
 {
 _pid_val =255;
@@ -101,7 +74,20 @@ else if (_pid_val < -255)
  _pid_val =-255;
  _ERR=1;
 }
-return _ERR;
+
+// next check to see if Hbridge is opeational
+if (( digitalRead(_DIAGb) == LOW)) // then the hbridge has pulled low to signifi a problem
+{
+_ERR = 2;
+}
+
+return _ERR ;
+}
+
+int Hbridgepwm::current()
+{
+_voltage_value = 10.2*analogRead(_CS); // reads the volatge at the current sense pin to determine the current that is flowing through the h bridge.
+return _voltage_value;
 }
 
 
