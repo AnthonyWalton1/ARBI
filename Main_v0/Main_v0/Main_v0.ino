@@ -68,12 +68,13 @@ int variable_value =0;
 int vv_1=0;
 int vv_2=0;
 int vv_3=0;
-
+bool invalid =0; // used to keep track of wheater the last message sent was invalid.
+bool send_message=0; // used to define wheater message need to be send
 
 void setup() {
   // setup code
-PELT.begin(9,22,23); // set up the hardware for the temperature pelter.
-PELTo.begin(10,24,25);
+PELT.begin(9,22,23,95,29,28); // set up the hardware for the temperature pelter.
+PELTo.begin(10,24,25,94,30,31);
 inputString.reserve(100);
 inputString2.reserve(100);
 
@@ -156,7 +157,6 @@ void loop() {
   Input = 0.25 * Temp_Avg;
 
   myPID.Compute();
-  PELT.hardwareprotect(Output);
   PELT.set_pwm(Output);
   // end
 
@@ -164,41 +164,19 @@ void loop() {
     Temp_Avg2 = Temp_2 + Temp_3;
   Input2 = 0.25 * Temp_Avg2;
   myPIDo.Compute();
-  PELTo.hardwareprotect(Output2);
   PELTo.set_pwm(Output2);
 // end
 
 // here we need to do serial communication work.
-// debug code
-inputString = "15_123";
-inputString2 = inputString;
-inputString2.toInt(); // convert it to an int
-  ID_1 =  inputString2[0]-48 ;
-  ID_2 =  inputString2[1]-48 ;
-variable_ID = (ID_1)*10 +ID_2 ;
+// must check for incoming instructions.
+serialEvent();
+// send setpoints.
 
-   vv_1 = inputString2[3]-48 ;
-   vv_2 = inputString2[4] -48 ;
-   vv_3 = inputString2[5] -48 ; // all the ascii values are converted to inetegrs.
-variable_value = (vv_1)*100 + (vv_2)*10 + (vv_3) ; // turned the ASCII three charcters into the actal number that they represent.
-Serial.print(variable_ID);
-Serial.print("\n");
-Serial.print(ID_1);
-Serial.print("\n");
-Serial.print(ID_2);
-Serial.print("\n");
-Serial.print(variable_value);
-Serial.print("\n");
-Serial.print(vv_1);
-Serial.print("\n");
-Serial.print(vv_2);
-Serial.print("\n");
-Serial.print(vv_3);
-Serial.print("\n");
-delay(10000);
-// end debug code.
-
-
+if (send_message ==1){
+serial_send_setpoints();
+send_message =0; // reset the send bool.
+}
+// end of sending protocol.
 
 }
 
@@ -296,9 +274,10 @@ void serialEvent() {
     inputString += inChar;
     // if the incoming character is a newline, set a flag
     // so the main loop can do something about it:
-    if (inChar == 91) { // this states the type of trailing null used.
-      stringComplete = 1;
+    if (inChar == 10) { // this states the type of trailing null used.
+      
       // we have a complete message, need to do some work with this message.
+    //  Serial.print("success"); // debug code
       recieve_uart ();
     }
   }
@@ -308,42 +287,261 @@ void recieve_uart (){
 // this function will only be called when we are given a completed strin, this functio'sn purpose is to trhow the string if it is bad and act upon the string if it is good. 
 // first test for possible ways the string is bad.
 // too long...
+inputString.trim(); // remove the carrage return and new line
+// Serial.print(inputString.length()); // debug code
+
+
 if (inputString.length() != 6) // length does not include trailing null.
 { // 9 is the length of all input strings so if not 9 is wrong
 inputString =""; // empty the string
+Serial.print("invalid\r\n");
 Serial.flush(); // remove all chars in the buffer as it is wrong.
 }
 else
 {
 // the string passed first test, next must pull out values and do work with them.
 // the setup of the string is (n_x\0) where n is variable number and x is variables value. 
+
+// Serial.print("success2\n"); // debug code
+ 
 inputString.trim(); // remove the null.
 inputString2 = inputString;
 inputString = ""; // empty the string to recieve the next message.
 inputString2.toInt(); // convert it to an int
 
   ID_1 =  inputString2[0]-48 ;
-  ID_2 =  inputString2[0]-48 ;
+  ID_2 =  inputString2[1]-48 ;
 variable_ID = (ID_1)*10 +ID_2 ;
    vv_1 = inputString2[3]-48 ;
    vv_2 = inputString2[4] -48 ;
    vv_3 = inputString2[5] -48 ; // all the ascii values are converted to inetegrs.
 variable_value = (vv_1)*100 + (vv_2)*10 + (vv_3) ; // turned the ASCII three charcters into the actal number that they represent.
 
+// Serial.print(variable_ID); // debug code
+// Serial.print("\n"); // debug code
+// Serial.print(variable_value); // debug code
+
+
 //the code now gets the ID and value out as ints that can be used in a simple case statment.
+// This case stament can be made a lot smaller by making a function that does the if staments in it. 
+switch (variable_ID) {
+          case 1:
+      //when vairable ID is one led pwm 1 is to be adjusted.
+      // must test to make sure that the variable is within acceptable margin
+      if (variable_value >= 0 &&variable_value <= 255)
+      {
+        // we have recieved a valid message do work to it.
+      analogWrite(2,150); // led 1
+      Serial.print("ack\r\n");
+      }
+      else
+      {
+       // we have recieved an invalid messgae
+       Serial.print("invalid\r\n");
+        
+      }
+    
+      
+      break;
+          case 2:
+      //when vairable ID is two led pwm 2 is to be adjusted.
+      
+      if (variable_value >= 0 &&variable_value <= 255)
+      {
+        // we have recieved a valid message do work to it.
+      analogWrite(3,150); // led 1
+      Serial.print("ack\r\n");
+      }
+      else
+      {
+       // we have recieved an invalid messgae
+       Serial.print("invalid\r\n");
+        
+      }
+    
+      
+      break;
+          case 3:
+      //when vairable ID is three led pwm 3 is to be adjusted.
+      if (variable_value >= 0 &&variable_value <= 255)
+      {
+        // we have recieved a valid message do work to it.
+      analogWrite(5,150); // led 1
+      Serial.print("ack\r\n");
+      }
+      else
+      {
+       // we have recieved an invalid messgae
+       Serial.print("invalid\r\n");
+        
+      }
+    
+      
+      break;
+          case 4:
+      //when vairable ID is four led pwm 4 is to be adjusted.
+      if (variable_value >= 0 &&variable_value <= 255)
+      {
+        // we have recieved a valid message do work to it.
+      analogWrite(6,150); // led 1
+      Serial.print("ack\r\n");
+      }
+      else
+      {
+       // we have recieved an invalid messgae
+       Serial.print("invalid\r\n");
+        
+      }
+    
+      
+      break;
+          case 5:
+      //when vairable ID is five led pwm 5 is to be adjusted.
+      if (variable_value >= 0 &&variable_value <= 255)
+      {
+        // we have recieved a valid message do work to it.
+      analogWrite(7,150); // led 1
+      Serial.print("ack\r\n");
+      }
+      else
+      {
+       // we have recieved an invalid messgae
+       Serial.print("invalid\r\n");
+        
+      }
+      
+      break;
+          case 6:
+      //when vairable ID is six led pwm 6 is to be adjusted.
+            if (variable_value >= 0 &&variable_value <= 255)
+      {
+        // we have recieved a valid message do work to it.
+      analogWrite(8,150); // led 1
+      Serial.print("ack\r\n");
+      }
+      else
+      {
+       // we have recieved an invalid messgae
+       Serial.print("invalid\r\n");
+        
+      }
 
+      break;
+               case 7:
+      //when vairable ID is seven the first temperature setpoint is to be adjusted.
+            if (variable_value >= 0 &&variable_value <= 30)
+      {
+        // we have recieved a valid message do work to it.
+      Setpoint = variable_value;
+      Serial.print("ack\r\n");
+      }
+      else
+      {
+       // we have recieved an invalid messgae
+       Serial.print("invalid\r\n");
+        
+      }
 
+      
+      break;
+                  case 8:
+      //when vairable ID is eight the second temperature setpoint is to be adjusted.
+      //when vairable ID is seven the first temperature setpoint is to be adjusted.
+            if (variable_value >= 0 &&variable_value <= 30)
+      {
+        // we have recieved a valid message do work to it.
+      Setpoint2 = variable_value;
+      Serial.print("ack\r\n");
+      }
+      else
+      {
+       // we have recieved an invalid messgae
+       Serial.print("invalid\r\n");
+        
+      }
+      
+      break;
+                        case 9:
+      //when vairable ID is nine the frequency divider value setpoint is to be adjusted.
+      //when vairable ID is seven the first temperature setpoint is to be adjusted.
+            if (variable_value >= 4 &&variable_value <= 1000000)
+      {
+        // we have recieved a valid message do work to it.
+      frequency_divder=variable_value;
+      Serial.print("ack\r\n");
+      }
+      else
+      {
+       // we have recieved an invalid messgae
+       Serial.print("invalid\r\n");
+        
+      }
+      
+      break;
+      case 99:
+      if (variable_value ==0){
+      send_message =1;
+     }
+     else{
+       Serial.print("invalid\r\n");
+     }
 
+     break;
+        
+    default: 
+    // is nothing matches then we have recieved an invalid message, do nothing. // set invalid to one.   
+    Serial.print("invalid\r\n"); 
 
+    break;
+  }
 
-
-
-
-  
 }
 
 }
 
+void serial_send_setpoints(){
+  if(Setpoint <10){
+Serial.print("07_00");
+Serial.print((int)Setpoint);
+Serial.print("\r\n");
+}
+else
+{
+Serial.print("07_0");
+Serial.print((int)Setpoint);
+Serial.print("\r\n");
+}
+
+if(Setpoint2 <10){
+Serial.print("08_00");
+Serial.print((int)Setpoint2);
+Serial.print("\r\n");
+}
+else
+{
+Serial.print("08_0");
+Serial.print((int)Setpoint2);
+Serial.print("\r\n");
+}
+
+
+if (frequency_divder<10){
+Serial.print("09_00");
+Serial.print(frequency_divder);
+Serial.print("\r\n");
+}
+else if(frequency_divder<100) {
+Serial.print("09_0");
+Serial.print(frequency_divder);
+Serial.print("\r\n");
+}
+else {
+Serial.print("09_");
+Serial.print(frequency_divder);
+Serial.print("\r\n");
+}
+
+}
 
   
 
