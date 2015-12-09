@@ -377,28 +377,38 @@ class ArbiGUI:
 		
 		print("Update Current Values")
 		ser.write("99_000\r\n")
+		
+		val = ser.read(1)
+		line = ""
+		while val not in ["\r", "\n"]:
+		
+			line += val
+			val = ser.read(1)
+			
+		
+		values = line.split(" ")
 
-		self.blueLed1Text.set("1")
+		self.blueLed1Text.set(values[0].split("_")[1])
 
-		self.blueLed2Text.set("2")
+		self.blueLed2Text.set(values[1].split("_")[1])
 
-		self.blueLed3Text.set("3")
+		self.blueLed3Text.set(values[2].split("_")[1])
 
-		self.redLed1Text.set("4")
+		self.redLed1Text.set(values[3].split("_")[1])
 				
 
-		self.redLed2Text.set("5")
+		self.redLed2Text.set(values[4].split("_")[1])
 
-		self.redLed3Text.set("6")
+		self.redLed3Text.set(values[5].split("_")[1])
 
-		self.insideTempText.set("7")
+		self.insideTempText.set(values[6].split("_")[1])
 
 
-		self.waterTempText.set("8")
+		self.waterTempText.set(values[7].split("_")[1])
 		
-		self.freqDiv1Text.set("9")
+		self.freqDiv1Text.set(values[8].split("_")[1])
 		
-		self.freqDiv2Text.set("10")
+		self.freqDiv2Text.set(values[9].split("_")[1])
 				
 				
 																												
