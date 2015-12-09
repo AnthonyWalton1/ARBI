@@ -21,7 +21,6 @@
  ********************************************************/
 
 #include "PID_v1.h"
-
 #define PIN_INPUT 0
 #define PIN_OUTPUT 3
 
@@ -51,8 +50,10 @@ float Temp_Avg = 0;
 float Temp_Avg2=0;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 PID myPIDo(&Input2, &Output2, &Setpoint2, Kp2, Ki2, Kd2, DIRECT);
-volatile int frequency_divder =5; // this variable is used to give the output frequency of the first pwm layer by divideing the base output frequency (~2500 hz), note must be at least 3
-volatile int frequency_count =1; // this variable is compared against the above.
+volatile long int frequency_divder =5; // this variable is used to give the output frequency of the first pwm layer by divideing the base output frequency (~2500 hz), note must be at least 3
+volatile long int frequency_count =1; // this variable is compared against the above.
+volatile long int frequency_set=5;
+volatile int frequency_divder2 =1; // this variable is used to give the output frequency of the first pwm layer by divideing the base output frequency (~2500 hz), note must be at least 3
 volatile int state =1; // used to keep track of wheater the pwm is on or off. is set to one as it set on in the setupt function.
 
 
@@ -75,16 +76,12 @@ void setup() {
   // setup code
 PELT.begin(9,22,23,95,29,28); // set up the hardware for the temperature pelter.
 PELTo.begin(10,24,25,94,30,31);
+// reserve space for the input buffers
 inputString.reserve(100);
 inputString2.reserve(100);
-
-
-
-
-// must have a large setup here for the temperature sensing device.
  // start serial port
   Serial.begin(9600);
-  // Start up the library
+  // Start up the sensor library
   sensors.begin();
 
   // locate devices on the bus
@@ -133,8 +130,6 @@ analogWrite(6,150); // led 4
 analogWrite(7,150); // led 5
 analogWrite(8,150); // led 6
 
-
-
 }
 //************************************************************************************************************************
 // start of main loop
@@ -143,10 +138,8 @@ analogWrite(8,150); // led 6
 
 void loop() {
   // put your main code here, to run repeatedly:
- 
-  sensors.requestTemperatures();
 
-  
+  sensors.requestTemperatures();  
   // set variables including device information
   Temp_0 = sensors.getTempC(Address0);
   Temp_1 = sensors.getTempC(Address1);
@@ -157,27 +150,32 @@ void loop() {
   Input = 0.25 * Temp_Avg;
 
   myPID.Compute();
-  PELT.set_pwm(Output);
+
+if (PELT.status(Output)==0){ // means hbridge is operational and we can set the value.
+  PELT.set_pwm(Output); 
+}
   // end
 
 // PID two for pelter connected to ...
     Temp_Avg2 = Temp_2 + Temp_3;
   Input2 = 0.25 * Temp_Avg2;
   myPIDo.Compute();
-  PELTo.set_pwm(Output2);
+  
+if (PELTo.status(Output)==0){ // means hbridge is operational and we can set the value.
+  PELTo.set_pwm(Output); 
+}
+  
 // end
-
-// here we need to do serial communication work.
-// must check for incoming instructions.
+// check serial communication
 serialEvent();
-// send setpoints.
 
+// send data if was asked to.
 if (send_message ==1){
 serial_send_setpoints();
 send_message =0; // reset the send bool.
 }
-// end of sending protocol.
 
+// end of main
 }
 
 
@@ -229,7 +227,7 @@ void printData(DeviceAddress deviceAddress)
 ISR(TIMER1_OVF_vect){
 // this is the interrupt service routine function (note as an interrupt function it can only see global varables)
 if (state ==0){ // the pwm is off, next must implement frequency divider
-if (frequency_divder != frequency_count){
+if (frequency_set > frequency_count){
 frequency_count = frequency_count +1; // update the count
   
 }
@@ -246,7 +244,7 @@ analogWrite(8,150); // led 6
   }
 }
 if (state ==1) { // the pwm is on, turn it off.
-if (frequency_divder != frequency_count){
+if (frequency_set > frequency_count){
 frequency_count = frequency_count +1; // update the count
   
 }
@@ -464,10 +462,13 @@ switch (variable_ID) {
                         case 9:
       //when vairable ID is nine the frequency divider value setpoint is to be adjusted.
       //when vairable ID is seven the first temperature setpoint is to be adjusted.
-            if (variable_value >= 4 &&variable_value <= 1000000)
+            if (variable_value >= 4 &&variable_value <= 999)
       {
         // we have recieved a valid message do work to it.
+       noInterrupts(); // disable interrupts as the below code requires mutilpe clocls and can break the code is is interrupted halfway thourhg.
       frequency_divder=variable_value;
+      frequency_set=frequency_divder*frequency_divder2; // update the frequency divider value
+      interrupts();
       Serial.print("ack\r\n");
       }
       else
@@ -476,6 +477,21 @@ switch (variable_ID) {
        Serial.print("invalid\r\n");
         
       }
+      break;
+      case 10:
+      if (variable_value >= 1 &&variable_value <= 999)
+      {
+      // must update the frequency value
+      noInterrupts();
+      frequency_divder2=variable_value;
+      frequency_set=frequency_divder*frequency_divder2; // update the frequency divider value
+      interrupts();
+       Serial.print("ack\r\n");   
+      }
+      else {
+         Serial.print("invalid\r\n");
+      }
+
       
       break;
       case 99:
@@ -541,9 +557,30 @@ Serial.print(frequency_divder);
 Serial.print("\r\n");
 }
 
+if (frequency_divder2<10){
+Serial.print("10_00");
+Serial.print(frequency_divder2);
+Serial.print("\r\n");
+}
+else if(frequency_divder2<100) {
+Serial.print("10_0");
+Serial.print(frequency_divder2);
+Serial.print("\r\n");
+}
+else {
+Serial.print("10_");
+Serial.print(frequency_divder2);
+Serial.print("\r\n");
 }
 
-  
+}
+// information for serial communication
+// 01 to 06 set pwm frquencies for respective pwm
+// 07 sets tempaerture setpoint 1
+// 08 sets temperature setpoint 2
+// 09 set frequency divder one
+// 10 sets frequency divder two
+// the frequency is given by 2500hz/ (frequency_divider_one * freqeucny_divider_two); 
 
 
 
