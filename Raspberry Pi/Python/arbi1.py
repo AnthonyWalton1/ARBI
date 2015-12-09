@@ -2,130 +2,326 @@
 
 from Tkinter import *
 
+import serial
+ser = serial.Serial('/dev/ttyACM0', 9600)
+
 class ArbiGUI:
+	
+	### ************* Attributes & Initial Code ************* ###
 	
 	def __init__(self, master):
 		
-		### ************* Attributes & Initial Code ************* ###
-		
+		window.wm_title("ARBI GUI")		
+		frame = Frame(master)
+		Grid.rowconfigure(master, 0, weight = 1)
+		Grid.columnconfigure(master, 0, weight = 1)
+		frame.grid(row = 0, column = 0, sticky = N+S+E+W)
+		grid = Frame(frame)
+		grid.grid(sticky=N+S+E+W, column = 0, row = 7, columnspan = 2)
+		Grid.rowconfigure(frame, 7, weight = 1)
+		Grid.columnconfigure(frame, 0, weight = 1)
+
+	
 		# ***** Led Label Frame ***** #
 		
-		self.BlueLed1Label = Label(master, text = "Blue LED 1")
-		self.BlueLed1Label.grid(row = 0, column = 0, sticky = W)
-		self.RedLed1Label = Label(master, text = "Red LED 1")
-		self.RedLed1Label.grid(row = 1, column = 0, sticky = W)
+		self.blueLed1Label = Label(frame, text = "Blue LED 1:")
+		self.blueLed1Label.grid(row = 0, column = 0, sticky = N+S+E+W)
+		self.redLed1Label = Label(frame, text = "Red LED 1:")
+		self.redLed1Label.grid(row = 1, column = 0, sticky = N+S+E+W)
 
-		self.BlueLed2Label = Label(master, text = "Blue LED 2")
-		self.BlueLed2Label.grid(row = 2, column = 0, sticky = W)
-		self.RedLed2Label = Label(master, text = "Red LED 2")
-		self.RedLed2Label.grid(row = 3, column = 0, sticky = W)
+		self.blueLed2Label = Label(frame, text = "Blue LED 2:")
+		self.blueLed2Label.grid(row = 2, column = 0, sticky = N+S+E+W)
+		self.redLed2Label = Label(frame, text = "Red LED 2:")
+		self.redLed2Label.grid(row = 3, column = 0, sticky = N+S+E+W)
 		
-		self.BlueLed3Label = Label(master, text = "Blue LED 3")
-		self.BlueLed3Label.grid(row = 4, column = 0, sticky = W)
-		self.RedLed3Label = Label(master, text = "Red LED 3")
-		self.RedLed3Label.grid(row = 5, column = 0, sticky = W)
+		self.blueLed3Label = Label(frame, text = "Blue LED 3:")
+		self.blueLed3Label.grid(row = 4, column = 0, sticky = N+S+E+W)
+		self.redLed3Label = Label(frame, text = "Red LED 3:")
+		self.redLed3Label.grid(row = 5, column = 0, sticky = N+S+E+W)
 
 		# ***** Current LED values ***** #
 
-		self.BlueLed1Value = Label(master, text = "100", bg = "white")
-		self.BlueLed1Value.grid(row = 0, column = 1, sticky = W, padx = 20)
-		self.RedLed1Value = Label(master, text = "0", bg = "white")
-		self.RedLed1Value.grid(row = 1, column = 1, sticky = W, padx = 20)
+		self.blueLed1Value = Label(frame, text = "100", bg = "white")
+		self.blueLed1Value.grid(row = 0, column = 1, sticky = N+S+E+W, padx = 20)
+		self.redLed1Value = Label(frame, text = "0", bg = "white")
+		self.redLed1Value.grid(row = 1, column = 1, sticky = N+S+E+W, padx = 20)
 
-		self.BlueLed2Value = Label(master, text = "145", bg = "white")
-		self.BlueLed2Value.grid(row = 2, column = 1, sticky = W, padx = 20)
-		self.RedLed2Value = Label(master, text = "20", bg = "white")
-		self.RedLed2Value.grid(row = 3, column = 1, sticky = W, padx = 20)
+		self.blueLed2Value = Label(frame, text = "145", bg = "white")
+		self.blueLed2Value.grid(row = 2, column = 1, sticky = N+S+E+W, padx = 20)
+		self.redLed2Value = Label(frame, text = "20", bg = "white")
+		self.redLed2Value.grid(row = 3, column = 1, sticky = N+S+E+W, padx = 20)
 		
-		self.BlueLed3Value = Label(master, text = "255", bg = "white")
-		self.BlueLed3Value.grid(row = 4, column = 1, sticky = W, padx = 20)
-		self.RedLed3Value = Label(master, text = "201", bg = "white")
-		self.RedLed3Value.grid(row = 5, column = 1, sticky = W, padx = 20)
+		self.blueLed3Value = Label(frame, text = "255", bg = "white")
+		self.blueLed3Value.grid(row = 4, column = 1, sticky = N+S+E+W, padx = 20)
+		self.redLed3Value = Label(frame, text = "201", bg = "white")
+		self.redLed3Value.grid(row = 5, column = 1, sticky = N+S+E+W, padx = 20)
 		
 		# ***** LED Input Boxes  ***** #
 		
-		self.BlueLed1Input = Entry(master)
-		self.BlueLed1Input.grid(row = 0, column = 2, padx = 20)
-		self.RedLed1Input = Entry(master)
-		self.RedLed1Input.grid(row = 1, column = 2, padx = 20)
+		self.blueLed1Input = Entry(frame)
+		self.blueLed1Input.grid(row = 0, column = 2, padx = 20)
+		self.redLed1Input = Entry(frame)
+		self.redLed1Input.grid(row = 1, column = 2, padx = 20)
 
-		self.BlueLed2Input = Entry(master)
-		self.BlueLed2Input.grid(row = 2, column = 2, padx = 20)
-		self.RedLed2Input = Entry(master)
-		self.RedLed2Input.grid(row = 3, column = 2, padx = 20)
+		self.blueLed2Input = Entry(frame)
+		self.blueLed2Input.grid(row = 2, column = 2, padx = 20)
+		self.redLed2Input = Entry(frame)
+		self.redLed2Input.grid(row = 3, column = 2, padx = 20)
 		
-		self.BlueLed3Input = Entry(master)
-		self.BlueLed3Input.grid(row = 4, column = 2, padx = 20)
-		self.RedLed3Input = Entry(master)
-		self.RedLed3Input.grid(row = 5, column = 2, padx = 20)
+		self.blueLed3Input = Entry(frame)
+		self.blueLed3Input.grid(row = 4, column = 2, padx = 20)
+		self.redLed3Input = Entry(frame)
+		self.redLed3Input.grid(row = 5, column = 2, padx = 20)
 		
-		# ***** LED Enter Button ***** #
+		# ***** LED Enter Buttons ***** #
 		
-		self.BlueLed1Button = Button(master, text = "        Set Blue LED 1 (%)", command = self.BlueLed1Enter)
-		self.BlueLed1Button.grid(row = 0, column = 3, sticky = E)
-		self.RedLed1Button = Button(master, text = "         Set Red LED 1 (%)", command = self.RedLed1Enter)
-		self.RedLed1Button.grid(row = 1, column = 3, sticky = E)
+		self.blueLed1Button = Button(frame, text = "Set Blue LED 1 (%)", command = self.BlueLed1Enter)
+		self.blueLed1Button.grid(row = 0, column = 3, sticky = N+S+E+W)
+		self.redLed1Button = Button(frame, text = "Set Red LED 1 (%)", command = self.RedLed1Enter)
+		self.redLed1Button.grid(row = 1, column = 3, sticky = N+S+E+W)
 
-		self.BlueLed2Button = Button(master, text = "        Set Blue LED 2 (%)", command = self.BlueLed2Enter)
-		self.BlueLed2Button.grid(row = 2, column = 3, sticky = E)
-		self.RedLed2Button = Button(master, text = "         Set Red LED 2 (%)", command = self.RedLed2Enter)
-		self.RedLed2Button.grid(row = 3, column = 3, sticky = E)
+		self.blueLed2Button = Button(frame, text = "Set Blue LED 2 (%)", command = self.BlueLed2Enter)
+		self.blueLed2Button.grid(row = 2, column = 3, sticky = N+S+E+W)
+		self.redLed2Button = Button(frame, text = "Set Red LED 2 (%)", command = self.RedLed2Enter)
+		self.redLed2Button.grid(row = 3, column = 3, sticky = N+S+E+W)
 		
-		self.BlueLed3 = Button(master, text = "        Set Blue LED 3 (%)", command = self.BlueLed3Enter)
-		self.BlueLed3.grid(row = 4, column = 3, sticky = E)
-		self.RedLed3 = Button(master, text = "         Set Red LED 3 (%)", command = self.RedLed3Enter)
-		self.RedLed3.grid(row = 5, column = 3, sticky = E)
+		self.blueLed3 = Button(frame, text = "Set Blue LED 3 (%)", command = self.BlueLed3Enter)
+		self.blueLed3.grid(row = 4, column = 3, sticky = N+S+E+W)
+		self.redLed3 = Button(frame, text = "Set Red LED 3 (%)", command = self.RedLed3Enter)
+		self.redLed3.grid(row = 5, column = 3, sticky = N+S+E+W)
 		
 		
-		# ***** Break Label ***** #
+		# ***** Break Label 1 ***** #
 		
-		self.BreakLabel1 = Label(master, text = "+----------------------------------------------------------------------------------------------------------------------------------------------+")
+		self.BreakLabel1 = Label(frame, text = "------------------------------------------------------------------------------------------------------------------------------------------------")
 		self.BreakLabel1.grid(row = 7, columnspan = 4)
 		
-		# ***** Temperature Boxes ***** #
+		# ***** Inside Air Temperature Boxes ***** #
 		
-		self.TempLabel = Label(master, text = "Temperature")
-		self.TempLabel.grid(row = 9, column = 0, sticky = W)
+		self.insideTempLabel = Label(frame, text = "Inside Temperature:")
+		self.insideTempLabel.grid(row = 9, column = 0, sticky = N+S+E+W)
 
-		self.TempValue = Label(master, text = "23", bg = "white")
-		self.TempValue.grid(row = 9, column = 1, sticky = W, padx = 20)
+		self.insideTempValue = Label(frame, text = "23", bg = "white")
+		self.insideTempValue.grid(row = 9, column = 1, sticky = N+S+E+W, padx = 20)
 		
-		self.TempInput = Entry(master)
-		self.TempInput.grid(row = 9, column = 2, padx = 20)
+		self.insideTempInput = Entry(frame)
+		self.insideTempInput.grid(row = 9, column = 2, padx = 20)
 		
-		self.TempButton = Button(master, text = "Set Temperatre (Deg C)", command = self.TempEnter)
-		self.TempButton.grid(row = 9, column = 3, sticky = E)
+		self.insideTempButton = Button(frame, text = "Set Inside Temperatre (Deg C)", command = self.InsideTempEnter)
+		self.insideTempButton.grid(row = 9, column = 3, sticky = N+S+E+W)
+		
+		# ***** Water Bath Temperature Boxes ***** #
+		
+		self.waterTempLabel = Label(frame, text = "Water Temperature:")
+		self.waterTempLabel.grid(row = 10, column = 0, sticky = N+S+E+W)
+
+		self.waterTempValue = Label(frame, text = "10", bg = "white")
+		self.waterTempValue.grid(row = 10, column = 1, sticky = N+S+E+W, padx = 20)
+		
+		self.waterTempInput = Entry(frame)
+		self.waterTempInput.grid(row = 10, column = 2, padx = 20)
+		
+		self.waterTempButton = Button(frame, text = " Set Water Temperatre (Deg C)", command = self.WaterTempEnter)
+		self.waterTempButton.grid(row = 10, column = 3, sticky = N+S+E+W)
+			
+		# ***** Break Label 2 ***** #
+		
+		self.BreakLabel2 = Label(frame, text = "------------------------------------------------------------------------------------------------------------------------------------------------")
+		self.BreakLabel2.grid(row = 12, columnspan = 4)
+		
+		# ***** Frequency Divider Boxes ***** #
+		
+		self.freqDivLabel = Label(frame, text = "Frequency Divider:")
+		self.freqDivLabel.grid(row = 14, column = 0, sticky = N+S+E+W)
+
+		self.freqDivValue = Label(frame, text = "100", bg = "white")
+		self.freqDivValue.grid(row = 14, column = 1, sticky = N+S+E+W, padx = 20)
+		
+		self.freqDivInput = Entry(frame)
+		self.freqDivInput.grid(row = 14, column = 2, padx = 20)
+		
+		self.freqDivButton = Button(frame, text = "Set Frequency Divider ([0, 999])", command = self.freqDivEnter)
+		self.freqDivButton.grid(row = 14, column = 3, sticky = N+S+E+W)
+		
+		# ***** Rescale GUI size ***** #
+		
+		for x in range(4):
+			Grid.columnconfigure(frame, x, weight = 1)
+
+		for y in range(15):
+			Grid.rowconfigure(frame, y, weight = 1)
 		
 		
-		### ******************   Methods   ****************** ###
+	### ******************   Methods   ****************** ###
 		
 	def BlueLed1Enter(self):
-		print("Blue LED 1 Entered")
+		
+		if (int(self.blueLed1Input.get()) < 10):
+			
+			print("01_00" + self.blueLed1Input.get() + "\r\n")
+			ser.write("01_00" + self.blueLed1Input.get() + "\r\n")
+			
+		elif (int(self.blueLed1Input.get()) < 100):
+			
+			print("01_0" + self.blueLed1Input.get() + "\r\n")
+			ser.write("01_0" + self.blueLed1Input.get() + "\r\n")
+			
+		elif (int(self.blueLed1Input.get()) < 256):
+			
+			print("01_" + self.blueLed1Input.get() + "\r\n")
+			ser.write("01_" + self.blueLed1Input.get() + "\r\n")
+			
 		
 	def RedLed1Enter(self):
-		print("Red LED 1 Entered")
+		
+		if (int(self.redLed1Input.get()) < 10):
+			
+			print("02_00" + self.redLed1Input.get() + "\r\n")
+			ser.write("02_00" + self.redLed1Input.get() + "\r\n")
+			
+		elif (int(self.redLed1Input.get()) < 100):
+			
+			print("02_0" + self.redLed1Input.get() + "\r\n")
+			ser.write("02_0" + self.redLed1Input.get() + "\r\n")
+			
+		elif (int(self.redLed1Input.get()) < 256):
+			
+			print("02_" + self.redLed1Input.get() + "\r\n")
+			ser.write("02_" + self.redLed1Input.get() + "\r\n")
+					
 	
 	def BlueLed2Enter(self):
-		print("Blue LED 2 Entered")
+
+		if (int(self.blueLed2Input.get()) < 10):
+			
+			print("03_00" + self.blueLed2Input.get() + "\r\n")
+			ser.write("03_00" + self.blueLed2Input.get() + "\r\n")
+			
+		elif (int(self.blueLed2Input.get()) < 100):
+			
+			print("03_0" + self.blueLed2Input.get() + "\r\n")
+			ser.write("03_0" + self.blueLed2Input.get() + "\r\n")
+			
+		elif (int(self.blueLed2Input.get()) < 256):
+			
+			print("03_" + self.blueLed2Input.get() + "\r\n")
+			ser.write("03_" + self.blueLed1Input.get() + "\r\n")
+			
 		
 	def RedLed2Enter(self):
-		print("Red LED 2 Entered")
+
+		if (int(self.redLed2Input.get()) < 10):
+			
+			print("04_00" + self.redLed2Input.get() + "\r\n")
+			ser.write("04_00" + self.redLed2Input.get() + "\r\n")
+			
+		elif (int(self.redLed2Input.get()) < 100):
+			
+			print("04_0" + self.redLed2Input.get() + "\r\n")
+			ser.write("04_0" + self.redLed2Input.get() + "\r\n")
+			
+		elif (int(self.redLed2Input.get()) < 256):
+			
+			print("04_" + self.redLed2Input.get() + "\r\n")
+			ser.write("04_" + self.redLed2Input.get() + "\r\n")
+			
 		
 	def BlueLed3Enter(self):
-		print("Blue LED 3 Entered")
+
+		if (int(self.blueLed3Input.get()) < 10):
+			
+			print("05_00" + self.blueLed3Input.get() + "\r\n")
+			ser.write("05_00" + self.blueLed3Input.get() + "\r\n")
+			
+		elif (int(self.blueLed3Input.get()) < 100):
+			
+			print("05_0" + self.blueLed3Input.get() + "\r\n")
+			ser.write("05_0" + self.blueLed3Input.get() + "\r\n")
+			
+		elif (int(self.blueLed3Input.get()) < 256):
+			
+			print("05_" + self.blueLed3Input.get() + "\r\n")
+			ser.write("05_" + self.blueLed3Input.get() + "\r\n")
+			
 		
 	def RedLed3Enter(self):
-		print("Red LED 3 Entered")
+
+		if (int(self.redLed3Input.get()) < 10):
+			
+			print("06_00" + self.redLed3Input.get() + "\r\n")
+			ser.write("06_00" + self.redLed3Input.get() + "\r\n")
+			
+		elif (int(self.redLed3Input.get()) < 100):
+			
+			print("06_0" + self.redLed3Input.get() + "\r\n")
+			ser.write("06_0" + self.redLed3Input.get() + "\r\n")
+			
+		elif (int(self.redLed3Input.get()) < 256):
+			
+			print("06_" + self.redLed3Input.get() + "\r\n")
+			ser.write("06_" + self.redLed3Input.get() + "\r\n")
+			
 		
-	def TempEnter(self):
-		print("Temperature Entered")	
+	def InsideTempEnter(self):
+
+		if (int(self.insideTempInput.get()) < 10):
+			
+			print("07_00" + self.insideTempInput.get() + "\r\n")
+			ser.write("07_00" + self.insideTempInput.get() + "\r\n")
+			
+		elif (int(self.insideTempInput.get()) < 100):
+			
+			print("07_0" + self.insideTempInput.get() + "\r\n")
+			ser.write("07_0" + self.insideTempInput.get() + "\r\n")
+			
+		elif (int(self.insideTempInput.get()) < 256):
+			
+			print("07_" + self.insideTempInput.get() + "\r\n")
+			ser.write("07_" + self.insideTempInput.get() + "\r\n")
+			
+	
+	def WaterTempEnter(self):
+
+		if (int(self.waterTempInput.get()) < 10):
+			
+			print("08_00" + self.waterTempInput.get() + "\r\n")
+			ser.write("08_00" + self.waterTempInput.get() + "\r\n")
+			
+		elif (int(self.waterTempInput.get()) < 100):
+			
+			print("08_0" + self.waterTempInput.get() + "\r\n")
+			ser.write("08_0" + self.waterTempInput.get() + "\r\n")
+			
+		elif (int(self.waterTempInput.get()) < 256):
+			
+			print("08_" + self.waterTempInput.get() + "\r\n")
+			ser.write("08_" + self.waterTempInput.get() + "\r\n")
+			
+			
+	def freqDivEnter(self):
+
+		if (int(self.freqDivInput.get()) < 10):
+			
+			print("08_00" + self.freqDivInput.get() + "\r\n")
+			ser.write("08_00" + self.waterTempInput.get() + "\r\n")
+			
+		elif (int(self.waterTempInput.get()) < 100):
+			
+			print("08_0" + self.waterTempInput.get() + "\r\n")
+			ser.write("08_0" + self.waterTempInput.get() + "\r\n")
+			
+		elif (int(self.waterTempInput.get()) < 256):
+			
+			print("08_" + self.waterTempInput.get() + "\r\n")
+			ser.write("08_" + self.waterTempInput.get() + "\r\n")			
 
 
 
 window = Tk()
 
-arbi = ArbiGUI(window)
+
+arbi1 = ArbiGUI(window)
+
 
 
 window.mainloop()
-
