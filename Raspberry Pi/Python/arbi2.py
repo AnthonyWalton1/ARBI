@@ -195,17 +195,42 @@ class ArbiGUI:
 		self.BreakLabel2 = Label(frame, text = "------------------------------------------------------------------------------------------------------------------------------------------------")
 		self.BreakLabel2.grid(row = 14, columnspan = 4)
 		
+		# ***** Flow Meter & Average Temperature of Air and Water Display Boxes ***** #
+		
+		self.flowMeter = StringVar()
+		self.averageTemp1 = StringVar()
+		self.averageTemp2 = StringVar()
+		
+		self.flowMeterTitle = Label(frame, text = "Flow Meter (L/min):")
+		self.flowMeterTitle.grid(row = 15, column = 0, sticky = N+S+E+W)
+		self.averageTemp1Title = Label(frame, text = " Av. Temp. Air (deg C)")
+		self.averageTemp1Title.grid(row = 16, column = 0, sticky = N+S+E+W)
+		self.averageTemp2Title = Label(frame, text = " Av. Temp. Water (deg C)")
+		self.averageTemp2Title.grid(row = 17, column = 0, sticky = N+S+E+W)
+		
+		self.flowMeterLabel = Label(frame, textvariable = self.flowMeter, bg = "white")
+		self.flowMeterLabel.grid(row = 15, column = 1, sticky = N+S+E+W, padx = 20)
+		self.averageTemp1Label = Label(frame, textvariable = self.averageTemp1, bg = "white")
+		self.averageTemp1Label.grid(row = 16, column = 1, sticky = N+S+E+W, padx = 20)
+		self.averageTemp2Label = Label(frame, textvariable = self.averageTemp2, bg = "white")
+		self.averageTemp2Label.grid(row = 17, column = 1, sticky = N+S+E+W, padx = 20)
+		
+		# ***** Break Label 4 ***** #
+		
+		self.BreakLabel2 = Label(frame, text = "------------------------------------------------------------------------------------------------------------------------------------------------")
+		self.BreakLabel2.grid(row = 18, columnspan = 4)
+		
 		# ***** Update Current Values Button ***** #
 		
 		self.updateCurValButton = Button(frame, text = "Update Current Values", command = self.updateCurValEnter)
-		self.updateCurValButton.grid(row = 15, column = 0, columnspan = 4, sticky = N+S+E+W)
+		self.updateCurValButton.grid(row = 19, column = 0, columnspan = 4, sticky = N+S+E+W)
 		
 		# ***** Rescale GUI size ***** #
 		
 		for x in range(4):
 			Grid.columnconfigure(frame, x, weight = 1)
 
-		for y in range(16):
+		for y in range(20):
 			Grid.rowconfigure(frame, y, weight = 1)
 			
 		
@@ -430,7 +455,11 @@ class ArbiGUI:
 		
 		# Include error checking that checks that the indexed element will actually exist based on split
 		# Note: the final enter \r\n isn't included in calculating len(line)
-		if len(line) == 69:
+		
+		# Reset error flag to off
+		error = 0
+		
+		if len(line) == 90:
 			print("correct length")
 			
 			if line[2] == "_":
@@ -438,48 +467,56 @@ class ArbiGUI:
 				self.blueLed1Text.set(values[0].split("_")[1])
 			else:
 				print("Return string: wrong format 01")
+				error = 1
 			
 			if line[9] == "_" and line[6] == " ":
 				print("02 correct")
 				self.blueLed2Text.set(values[1].split("_")[1])
 			else:
 				print("Return string: wrong format 02")
+				error = 1
 			
 			if line[16] == "_" and line[13] == " ":
 				print("03 correct")
 				self.blueLed3Text.set(values[2].split("_")[1])
 			else:
-				print("Return string: wrong format 03")	
+				print("Return string: wrong format 03")
+				error = 1
 			
 			if line[23] == "_" and line[20] == " ":
 				print("04 correct")
 				self.redLed1Text.set(values[3].split("_")[1])
 			else:
 				print("Return string: wrong format 04")
+				error = 1
 			
 			if line[30] == "_" and line[27] == " ":
 				print("05 correct")
 				self.redLed2Text.set(values[4].split("_")[1])
 			else:
 				print("Return string: wrong format 05")
+				error = 1
 			
 			if line[37] == "_" and line[34] == " ":
 				print("06 correct")
 				self.redLed3Text.set(values[5].split("_")[1])
 			else:
-				print("Return string: wrong format 06")				
+				print("Return string: wrong format 06")
+				error = 1		
 			
 			if line[44] == "_" and line[41] == " ":
 				print("07 correct")
 				self.insideTempText.set(values[6].split("_")[1])
 			else:
 				print("Return string: wrong format 07")
+				error = 1
 							
 			if line[51] == "_" and line[48] == " ":
 				print("08 correct")
 				self.waterTempText.set(values[7].split("_")[1])
 			else:
 				print("Return string: wrong format 08")
+				error = 1
 							
 			if line[58] == "_" and line[55] == " ":
 				print("09 correct")
@@ -488,6 +525,7 @@ class ArbiGUI:
 			else:
 				print("Return string: wrong format 09")
 				freqMult1 = 0
+				error = 1
 							
 			if line[65] == "_" and line[62] == " ":
 				print("10 correct")
@@ -496,16 +534,47 @@ class ArbiGUI:
 			else:
 				print("Return string: wrong format 10")
 				freqMult2 = 0
+				error = 1
+			
+			if line[72] == "_" and line[69] == " ":
+				print("11 correct")
+				self.flowMeter.set(str(float(values[10].split("_")[1])/10))
+			else:
+				print("Return string: wrong format 10")
+				error = 1
+			
+			if line[79] == "_" and line[76] == " ":
+				print("12 correct")
+				self.averageTemp1.set(values[11].split("_")[1])
+			else:
+				print("Return string: wrong format 11")
+				error = 1
+				
+			if line[86] == "_" and line[83] == " ":
+				print("13 correct")
+				self.averageTemp2.set(values[12].split("_")[1])
+			else:
+				print("Return string: wrong format 13")
+				error = 1
+				
+			if freqMult1 == 1 and freqMult2 == 1:
+			
+				freqDispAns = 2500/(float(self.freqDiv1Text.get()) * float(self.freqDiv2Text.get()))
+				periodDispAns = 1/freqDispAns
+			
+				self.freqDisp.set(str(freqDispAns))
+				self.periodDisp.set(str(periodDispAns))	
+					
 		else:
-			print("Return string: wrong length 10")
+			print("Return string: wrong length")
+			error = 1
 			
-		if freqMult1 == 1 and freqMult2 == 1:
 			
-			freqDispAns = 2500/(float(self.freqDiv1Text.get()) * float(self.freqDiv2Text.get()))
-			periodDispAns = 1/freqDispAns
-			
-			self.freqDisp.set(str(freqDispAns))
-			self.periodDisp.set(str(periodDispAns))
+		# If any errors occured, request a resend	
+		if error == 1:
+			# Send signal to Arduino to send its current values again
+			ser.write("99_000\r\n")
+		
 		
 		
 # Start a new GUI																												
