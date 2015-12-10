@@ -5,6 +5,8 @@ from Tkinter import *
 import serial
 ser = serial.Serial('/dev/ttyACM0', 9600)
 
+import time
+
 class ArbiGUI:
 	
 	### ************* Attributes & Initial Code ************* ###
@@ -26,19 +28,19 @@ class ArbiGUI:
 	
 		# ***** Led Label Frame ***** #
 		
-		self.blueLed1Label = Label(frame, text = "Blue LED 1:")
+		self.blueLed1Label = Label(frame, text = " Blue LED 1 Intensity:")
 		self.blueLed1Label.grid(row = 0, column = 0, sticky = N+S+E+W)
-		self.redLed1Label = Label(frame, text = "Red LED 1:")
+		self.redLed1Label = Label(frame, text = "Red LED 1 Intensity:")
 		self.redLed1Label.grid(row = 1, column = 0, sticky = N+S+E+W)
 
-		self.blueLed2Label = Label(frame, text = "Blue LED 2:")
+		self.blueLed2Label = Label(frame, text = " Blue LED 2 Intensity:")
 		self.blueLed2Label.grid(row = 2, column = 0, sticky = N+S+E+W)
-		self.redLed2Label = Label(frame, text = "Red LED 2:")
+		self.redLed2Label = Label(frame, text = "Red LED 2 Intensity:")
 		self.redLed2Label.grid(row = 3, column = 0, sticky = N+S+E+W)
 		
-		self.blueLed3Label = Label(frame, text = "Blue LED 3:")
+		self.blueLed3Label = Label(frame, text = " Blue LED 3 Intensity:")
 		self.blueLed3Label.grid(row = 4, column = 0, sticky = N+S+E+W)
-		self.redLed3Label = Label(frame, text = "Red LED 3:")
+		self.redLed3Label = Label(frame, text = "Red LED 3 Intensity:")
 		self.redLed3Label.grid(row = 5, column = 0, sticky = N+S+E+W)
 
 		# ***** Current LED values ***** #
@@ -84,21 +86,20 @@ class ArbiGUI:
 		
 		# ***** LED Enter Buttons ***** #
 		
-		self.blueLed1Button = Button(frame, text = "Set Blue LED 1 (%)", command = self.BlueLed1Enter)
+		self.blueLed1Button = Button(frame, text = "Set Blue LED 1 (PWM Ratio/255)", command = self.BlueLed1Enter)
 		self.blueLed1Button.grid(row = 0, column = 3, sticky = N+S+E+W)
-		self.redLed1Button = Button(frame, text = "Set Red LED 1 (%)", command = self.RedLed1Enter)
+		self.redLed1Button = Button(frame, text = "Set Red LED 1 (PWM Ratio/255)", command = self.RedLed1Enter)
 		self.redLed1Button.grid(row = 1, column = 3, sticky = N+S+E+W)
 
-		self.blueLed2Button = Button(frame, text = "Set Blue LED 2 (%)", command = self.BlueLed2Enter)
+		self.blueLed2Button = Button(frame, text = "Set Blue LED 2 (PWM Ratio/255)", command = self.BlueLed2Enter)
 		self.blueLed2Button.grid(row = 2, column = 3, sticky = N+S+E+W)
-		self.redLed2Button = Button(frame, text = "Set Red LED 2 (%)", command = self.RedLed2Enter)
+		self.redLed2Button = Button(frame, text = "Set Red LED 2 (PWM Ratio/255)", command = self.RedLed2Enter)
 		self.redLed2Button.grid(row = 3, column = 3, sticky = N+S+E+W)
 		
-		self.blueLed3 = Button(frame, text = "Set Blue LED 3 (%)", command = self.BlueLed3Enter)
+		self.blueLed3 = Button(frame, text = "Set Blue LED 3 (PWM Ratio/255)", command = self.BlueLed3Enter)
 		self.blueLed3.grid(row = 4, column = 3, sticky = N+S+E+W)
-		self.redLed3 = Button(frame, text = "Set Red LED 3 (%)", command = self.RedLed3Enter)
+		self.redLed3 = Button(frame, text = "Set Red LED 3 (PWM Ratio/255)", command = self.RedLed3Enter)
 		self.redLed3.grid(row = 5, column = 3, sticky = N+S+E+W)
-		
 		
 		# ***** Break Label 1 ***** #
 		
@@ -109,7 +110,7 @@ class ArbiGUI:
 		
 		self.insideTempText = StringVar()
 		
-		self.insideTempLabel = Label(frame, text = "Inside Temperature:")
+		self.insideTempLabel = Label(frame, text = " Inside Temperature:")
 		self.insideTempLabel.grid(row = 7, column = 0, sticky = N+S+E+W)
 
 		self.insideTempValue = Label(frame, textvariable = self.insideTempText, bg = "white")
@@ -125,7 +126,7 @@ class ArbiGUI:
 		
 		self.waterTempText = StringVar()
 		
-		self.waterTempLabel = Label(frame, text = "Water Temperature:")
+		self.waterTempLabel = Label(frame, text = " Water Temperature:")
 		self.waterTempLabel.grid(row = 8, column = 0, sticky = N+S+E+W)
 
 		self.waterTempValue = Label(frame, textvariable = self.waterTempText, bg = "white")
@@ -146,7 +147,7 @@ class ArbiGUI:
 		
 		self.freqDiv1Text = StringVar()
 		
-		self.freqDiv1Label = Label(frame, text = "Frequency Divider 1:")
+		self.freqDiv1Label = Label(frame, text = " Frequency Divider 1:")
 		self.freqDiv1Label.grid(row = 10, column = 0, sticky = N+S+E+W)
 
 		self.freqDiv1Value = Label(frame, textvariable = self.freqDiv1Text, bg = "white")
@@ -162,7 +163,7 @@ class ArbiGUI:
 		
 		self.freqDiv2Text = StringVar()
 		
-		self.freqDiv2Label = Label(frame, text = "Frequency Divider 2:")
+		self.freqDiv2Label = Label(frame, text = " Frequency Divider 2:")
 		self.freqDiv2Label.grid(row = 11, column = 0, sticky = N+S+E+W)
 
 		self.freqDiv2Value = Label(frame, textvariable = self.freqDiv2Text, bg = "white")
@@ -174,24 +175,39 @@ class ArbiGUI:
 		self.freqDiv2Button = Button(frame, text = "Set Frequency Divider 2 ([0, 999])", command = self.freqDiv2Enter)
 		self.freqDiv2Button.grid(row = 11, column = 3, sticky = N+S+E+W)
 		
+		# ***** LED Frequency & Period Display Boxes ***** #
+		
+		self.freqDisp = StringVar()
+		self.periodDisp = StringVar()
+		
+		self.freqDispTitle = Label(frame, text = "LED Frequency (Hz):")
+		self.freqDispTitle.grid(row = 12, column = 0, sticky = N+S+E+W)
+		self.periodDispTitle = Label(frame, text = "LED Period (s):")
+		self.periodDispTitle.grid(row = 13, column = 0, sticky = N+S+E+W)
+		
+		self.freqDispLabel = Label(frame, textvariable = self.freqDisp, bg = "white")
+		self.freqDispLabel.grid(row = 12, column = 1, sticky = N+S+E+W, padx = 20)
+		self.periodDispLabel = Label(frame, textvariable = self.periodDisp, bg = "white")
+		self.periodDispLabel.grid(row = 13, column = 1, sticky = N+S+E+W, padx = 20)
+		
 		# ***** Break Label 3 ***** #
 		
 		self.BreakLabel2 = Label(frame, text = "------------------------------------------------------------------------------------------------------------------------------------------------")
-		self.BreakLabel2.grid(row = 12, columnspan = 4)
+		self.BreakLabel2.grid(row = 14, columnspan = 4)
 		
 		# ***** Update Current Values Button ***** #
 		
 		self.updateCurValButton = Button(frame, text = "Update Current Values", command = self.updateCurValEnter)
-		self.updateCurValButton.grid(row = 13, column = 0, columnspan = 4, sticky = N+S+E+W)
+		self.updateCurValButton.grid(row = 15, column = 0, columnspan = 4, sticky = N+S+E+W)
 		
 		# ***** Rescale GUI size ***** #
 		
 		for x in range(4):
 			Grid.columnconfigure(frame, x, weight = 1)
 
-		for y in range(14):
+		for y in range(16):
 			Grid.rowconfigure(frame, y, weight = 1)
-		
+			
 		
 	### ******************   Methods   ****************** ###
 		
@@ -211,78 +227,78 @@ class ArbiGUI:
 			
 			print("01_" + self.blueLed1Input.get() + "\r\n")
 			ser.write("01_" + self.blueLed1Input.get() + "\r\n")
+
+
+	def BlueLed2Enter(self):
+
+		if (int(self.blueLed2Input.get()) < 10):
+			
+			print("02_00" + self.blueLed2Input.get() + "\r\n")
+			ser.write("02_00" + self.blueLed2Input.get() + "\r\n")
+			
+		elif (int(self.blueLed2Input.get()) < 100):
+			
+			print("02_0" + self.blueLed2Input.get() + "\r\n")
+			ser.write("02_0" + self.blueLed2Input.get() + "\r\n")
+			
+		elif (int(self.blueLed2Input.get()) < 256):
+			
+			print("02_" + self.blueLed2Input.get() + "\r\n")
+			ser.write("02_" + self.blueLed1Input.get() + "\r\n")
+			
+
+	def BlueLed3Enter(self):
+
+		if (int(self.blueLed3Input.get()) < 10):
+			
+			print("03_00" + self.blueLed3Input.get() + "\r\n")
+			ser.write("03_00" + self.blueLed3Input.get() + "\r\n")
+			
+		elif (int(self.blueLed3Input.get()) < 100):
+			
+			print("03_0" + self.blueLed3Input.get() + "\r\n")
+			ser.write("03_0" + self.blueLed3Input.get() + "\r\n")
+			
+		elif (int(self.blueLed3Input.get()) < 256):
+			
+			print("03_" + self.blueLed3Input.get() + "\r\n")
+			ser.write("03_" + self.blueLed3Input.get() + "\r\n")						
 			
 		
 	def RedLed1Enter(self):
 		
 		if (int(self.redLed1Input.get()) < 10):
 			
-			print("02_00" + self.redLed1Input.get() + "\r\n")
-			ser.write("02_00" + self.redLed1Input.get() + "\r\n")
+			print("04_00" + self.redLed1Input.get() + "\r\n")
+			ser.write("04_00" + self.redLed1Input.get() + "\r\n")
 			
 		elif (int(self.redLed1Input.get()) < 100):
 			
-			print("02_0" + self.redLed1Input.get() + "\r\n")
-			ser.write("02_0" + self.redLed1Input.get() + "\r\n")
+			print("04_0" + self.redLed1Input.get() + "\r\n")
+			ser.write("04_0" + self.redLed1Input.get() + "\r\n")
 			
 		elif (int(self.redLed1Input.get()) < 256):
 			
-			print("02_" + self.redLed1Input.get() + "\r\n")
-			ser.write("02_" + self.redLed1Input.get() + "\r\n")
+			print("04_" + self.redLed1Input.get() + "\r\n")
+			ser.write("04_" + self.redLed1Input.get() + "\r\n")
 					
 	
-	def BlueLed2Enter(self):
-
-		if (int(self.blueLed2Input.get()) < 10):
-			
-			print("03_00" + self.blueLed2Input.get() + "\r\n")
-			ser.write("03_00" + self.blueLed2Input.get() + "\r\n")
-			
-		elif (int(self.blueLed2Input.get()) < 100):
-			
-			print("03_0" + self.blueLed2Input.get() + "\r\n")
-			ser.write("03_0" + self.blueLed2Input.get() + "\r\n")
-			
-		elif (int(self.blueLed2Input.get()) < 256):
-			
-			print("03_" + self.blueLed2Input.get() + "\r\n")
-			ser.write("03_" + self.blueLed1Input.get() + "\r\n")
-			
-		
 	def RedLed2Enter(self):
 
 		if (int(self.redLed2Input.get()) < 10):
 			
-			print("04_00" + self.redLed2Input.get() + "\r\n")
-			ser.write("04_00" + self.redLed2Input.get() + "\r\n")
+			print("05_00" + self.redLed2Input.get() + "\r\n")
+			ser.write("05_00" + self.redLed2Input.get() + "\r\n")
 			
 		elif (int(self.redLed2Input.get()) < 100):
 			
-			print("04_0" + self.redLed2Input.get() + "\r\n")
-			ser.write("04_0" + self.redLed2Input.get() + "\r\n")
+			print("05_0" + self.redLed2Input.get() + "\r\n")
+			ser.write("05_0" + self.redLed2Input.get() + "\r\n")
 			
 		elif (int(self.redLed2Input.get()) < 256):
 			
-			print("04_" + self.redLed2Input.get() + "\r\n")
-			ser.write("04_" + self.redLed2Input.get() + "\r\n")
-			
-		
-	def BlueLed3Enter(self):
-
-		if (int(self.blueLed3Input.get()) < 10):
-			
-			print("05_00" + self.blueLed3Input.get() + "\r\n")
-			ser.write("05_00" + self.blueLed3Input.get() + "\r\n")
-			
-		elif (int(self.blueLed3Input.get()) < 100):
-			
-			print("05_0" + self.blueLed3Input.get() + "\r\n")
-			ser.write("05_0" + self.blueLed3Input.get() + "\r\n")
-			
-		elif (int(self.blueLed3Input.get()) < 256):
-			
-			print("05_" + self.blueLed3Input.get() + "\r\n")
-			ser.write("05_" + self.blueLed3Input.get() + "\r\n")
+			print("05_" + self.redLed2Input.get() + "\r\n")
+			ser.write("05_" + self.redLed2Input.get() + "\r\n")
 			
 		
 	def RedLed3Enter(self):
@@ -356,6 +372,7 @@ class ArbiGUI:
 			print("09_" + self.freqDiv1Input.get() + "\r\n")
 			ser.write("09_" + self.freqDiv1Input.get() + "\r\n")		
 			
+			
 	def freqDiv2Enter(self):
 
 		if (int(self.freqDiv2Input.get()) < 10):
@@ -373,47 +390,129 @@ class ArbiGUI:
 			print("10_" + self.freqDiv2Input.get() + "\r\n")
 			ser.write("10_" + self.freqDiv2Input.get() + "\r\n")
 
+
 	def updateCurValEnter(self):
 		
-		print("Update Current Values")
+		# Send signal to Arduino to send its current values
 		ser.write("99_000\r\n")
 		
+		# Wait for 1 second for Arduino to calculate and send information
+		time.sleep(1)
+		
+		# Read one byte at a time as it is received
 		val = ser.read(1)
+
+		# Initialise an empty string
 		line = ""
-		while val not in ["\r", "\n"]:
 		
-			line += val
-			val = ser.read(1)
+		# The signal for end of transmission is an enter (\r\n)
+		# Note: this sequence prevents the last character '\r' from being included in the string
+		while val not in ["\n"]:
+		
+			if val != "\r":
+				
+				# While the signal has not ended, add each byte to the next spot in the string
+				line += val
 			
-		
+			# Read the next byte
+			val = ser.read(1)
+
+		# Split the incoming string at the spaces as each data piece is separated by a space
 		values = line.split(" ")
-
-		self.blueLed1Text.set(values[0].split("_")[1])
-
-		self.blueLed2Text.set(values[1].split("_")[1])
-
-		self.blueLed3Text.set(values[2].split("_")[1])
-
-		self.redLed1Text.set(values[3].split("_")[1])
-				
-
-		self.redLed2Text.set(values[4].split("_")[1])
-
-		self.redLed3Text.set(values[5].split("_")[1])
-
-		self.insideTempText.set(values[6].split("_")[1])
-
-
-		self.waterTempText.set(values[7].split("_")[1])
 		
-		self.freqDiv1Text.set(values[8].split("_")[1])
+		print(line)
 		
-		self.freqDiv2Text.set(values[9].split("_")[1])
-				
-				
-																												
+		# The first piece of data corresponds to Blue Led 1 so index values at 0.
+		# Then, split this at the underscore and take the second element that is the value (i.e. index 1)
+		# The first value is a number that signals what parameter the value relates to (i.e for Blue Led, signal = 01)
+		
+		# Repeat for all, setting the new value shown in the label boxes
+		
+		# Include error checking that checks that the indexed element will actually exist based on split
+		# Note: the final enter \r\n isn't included in calculating len(line)
+		if len(line) == 69:
+			print("correct length")
+			
+			if line[2] == "_":
+				print("01 correct")
+				self.blueLed1Text.set(values[0].split("_")[1])
+			else:
+				print("Return string: wrong format 01")
+			
+			if line[9] == "_" and line[6] == " ":
+				print("02 correct")
+				self.blueLed2Text.set(values[1].split("_")[1])
+			else:
+				print("Return string: wrong format 02")
+			
+			if line[16] == "_" and line[13] == " ":
+				print("03 correct")
+				self.blueLed3Text.set(values[2].split("_")[1])
+			else:
+				print("Return string: wrong format 03")	
+			
+			if line[23] == "_" and line[20] == " ":
+				print("04 correct")
+				self.redLed1Text.set(values[3].split("_")[1])
+			else:
+				print("Return string: wrong format 04")
+			
+			if line[30] == "_" and line[27] == " ":
+				print("05 correct")
+				self.redLed2Text.set(values[4].split("_")[1])
+			else:
+				print("Return string: wrong format 05")
+			
+			if line[37] == "_" and line[34] == " ":
+				print("06 correct")
+				self.redLed3Text.set(values[5].split("_")[1])
+			else:
+				print("Return string: wrong format 06")				
+			
+			if line[44] == "_" and line[41] == " ":
+				print("07 correct")
+				self.insideTempText.set(values[6].split("_")[1])
+			else:
+				print("Return string: wrong format 07")
+							
+			if line[51] == "_" and line[48] == " ":
+				print("08 correct")
+				self.waterTempText.set(values[7].split("_")[1])
+			else:
+				print("Return string: wrong format 08")
+							
+			if line[58] == "_" and line[55] == " ":
+				print("09 correct")
+				self.freqDiv1Text.set(values[8].split("_")[1])
+				freqMult1 = 1
+			else:
+				print("Return string: wrong format 09")
+				freqMult1 = 0
+							
+			if line[65] == "_" and line[62] == " ":
+				print("10 correct")
+				self.freqDiv2Text.set(values[9].split("_")[1])
+				freqMult2 = 1
+			else:
+				print("Return string: wrong format 10")
+				freqMult2 = 0
+		else:
+			print("Return string: wrong length 10")
+			
+		if freqMult1 == 1 and freqMult2 == 1:
+			
+			freqDispAns = 2500/(float(self.freqDiv1Text.get()) * float(self.freqDiv2Text.get()))
+			periodDispAns = 1/freqDispAns
+			
+			self.freqDisp.set(str(freqDispAns))
+			self.periodDisp.set(str(periodDispAns))
+		
+		
+# Start a new GUI																												
 window = Tk()
 
+# Create an instance of the class called arbi1
 arbi1 = ArbiGUI(window)
 
+# Run the GUI until quitting
 window.mainloop()
