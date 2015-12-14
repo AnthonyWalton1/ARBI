@@ -220,16 +220,6 @@ class ArbiGUI:
 		self.averageTemp2Label = Label(frame, textvariable = self.averageTemp2, bg = "white")
 		self.averageTemp2Label.grid(row = 13, column = 1, sticky = N+S+E+W, padx = 20)
 		
-		# ***** Break Label 3 ***** #
-		
-		self.BreakLabel2 = Label(frame, text = breakLabel)
-		self.BreakLabel2.grid(row = 14, columnspan = 4)
-		
-		# ***** Update Current Values Button ***** #
-		
-		self.updateCurValButton = Button(frame, text = "Update Current Values", command = self.updateCurValEnter)
-		self.updateCurValButton.grid(row = 15, column = 0, columnspan = 4, sticky = N+S+E+W)
-		
 		# ***** Rescale GUI size ***** #
 		
 		for x in range(4):
@@ -407,144 +397,6 @@ class ArbiGUI:
 			self.ledOffTimeInput.delete(0, END)
 			self.ledOffTimeInput.insert(END, "1")
 
-
-	def updateCurValEnter(self):
-		
-		# Send signal to Arduino to send its current values
-		ser.write("99_000\r\n")
-		
-		# Wait for 1 second for Arduino to calculate and send information
-		time.sleep(1)
-		
-		# Read one byte at a time as it is received
-		val = ser.read(1)
-
-		# Initialise an empty string
-		line = ""
-		
-		# The signal for end of transmission is an enter (\r\n)
-		# Note: this sequence prevents the last character '\r' from being included in the string
-		while val not in ["\n"]:
-		
-			if val != "\r":
-				
-				# While the signal has not ended, add each byte to the next spot in the string
-				line += val
-			
-			# Read the next byte
-			val = ser.read(1)
-			
-		val = ser.read(2)
-
-		# Split the incoming string at the spaces as each data piece is separated by a space
-		values = line.split(" ")
-		
-		print(line)
-		
-		# The first piece of data corresponds to Blue Led 1 so index values at 0.
-		# Then, split this at the underscore and take the second element that is the value (i.e. index 1)
-		# The first value is a number that signals what parameter the value relates to (i.e for Blue Led, signal = 01)
-		
-		# Repeat for all, setting the new value shown in the label boxes
-		
-		# Include error checking that checks that the indexed element will actually exist based on split
-		# Note: the final enter \r\n isn't included in calculating len(line)
-		
-		# Reset error flag to off
-		error = 0
-		
-		print(len(line))
-		if len(line) == 109:
-			print("correct length")
-			
-			if line[2] == "_":
-				print("01 correct")
-				self.blueLed1Text.set(values[0].split("_")[1])
-			else:
-				print("Return string: wrong format 01")
-				error = 1
-			
-			if line[9] == "_" and line[6] == " ":
-				print("02 correct")
-				self.blueLed2Text.set(values[1].split("_")[1])
-			else:
-				print("Return string: wrong format 02")
-				error = 1
-			
-			if line[16] == "_" and line[13] == " ":
-				print("03 correct")
-				self.blueLed3Text.set(values[2].split("_")[1])
-			else:
-				print("Return string: wrong format 03")
-				error = 1
-			
-			if line[23] == "_" and line[20] == " ":
-				print("04 correct")
-				self.redLed1Text.set(values[3].split("_")[1])
-			else:
-				print("Return string: wrong format 04")
-				error = 1
-			
-			if line[30] == "_" and line[27] == " ":
-				print("05 correct")
-				self.redLed2Text.set(values[4].split("_")[1])
-			else:
-				print("Return string: wrong format 05")
-				error = 1
-			
-			if line[37] == "_" and line[34] == " ":
-				print("06 correct")
-				self.redLed3Text.set(values[5].split("_")[1])
-			else:
-				print("Return string: wrong format 06")
-				error = 1		
-			
-			if line[44] == "_" and line[41] == " ":
-				print("07 correct")
-				self.insideTempText.set(values[6].split("_")[1])
-			else:
-				print("Return string: wrong format 07")
-				error = 1
-							
-			if line[51] == "_" and line[48] == " ":
-				print("08 correct")
-				self.waterTempText.set(values[7].split("_")[1])
-			else:
-				print("Return string: wrong format 08")
-				error = 1
-			
-			if line[84] == "_" and line[81] == " ":
-				print("11 correct")
-				self.flowMeter.set(str(float(values[10].split("_")[1])/10))
-			else:
-				print("Return string: wrong format 10")
-				error = 1
-			
-			if line[91] == "_" and line[88] == " ":
-				print("12 correct")
-				self.averageTemp1.set(values[11].split("_")[1])
-			else:
-				print("Return string: wrong format 11")
-				error = 1
-				
-			if line[98] == "_" and line[95] == " ":
-				print("13 correct")
-				self.averageTemp2.set(values[12].split("_")[1])
-			else:
-				print("Return string: wrong format 13")
-				error = 1
-					
-		else:
-			print("Return string: wrong length")
-			error = 1
-			
-			
-		# If any errors occured, request a resend	
-		if error == 1:
-			# Send signal to Arduino to send its current values again
-			ser.write("99_000\r\n")
-		
-		
 		
 # Start a new GUI																												
 window = Tk()
@@ -552,13 +404,224 @@ window = Tk()
 # Create an instance of the class called arbi1
 arbi1 = ArbiGUI(window)
 
+# Open a text file in writing "w" mode
+# Note: opening in writing mode means that all data in the previous version of the file is overwritten
+# Note: this is helpful as the text file can be restarted every time the GUI/session restarts
+text_file = open("arbi6_text.txt", "w")
 
 
-def task():
-	print("Hello")
-	window.after(2000, task)
+# Define the function which runs every 5 seconds that will read Arduino data, set current values and save them to a text file
+def textFileWrite(self):
+	
+	# Open the text file each time since we close it each time
+	# Note: "a" means opening the text file in append mode. This is required as "w" writing mode overwrites the previous file once it is closed an re-opened.
+	# Note: we want to add the next set of data to the pre-existing list, which is what append mode does.
+	text_file = open("arbi6_text.txt", "a")
+	
+	# Send the signal to the Arduino to send the Raspberry Pi all data
+	ser.write("99_000\r\n")
+	
+	# Wait for the data to be received from the Arduino
+	time.sleep(1)
+	
+	# Call this function to run again in 4 seconds (total time interval is thus 1 second wait + 4 second iterative timer = data every 5 seconds)
+	# Note: this is a self-iterating function process
+	window.after(4000, textFileWrite)
+	
+	# Read the first byte and initialise the input string
+	val = ser.read(1)
+	line = ""
+	
+	# While the enter signifying the end of the transmission string has not been encountered
+	while val not in ["\n"]:
+		
+		# If it is not the carraige return immeadiately before the new line (in the enter)
+		if val != "\r":
+			line += val
+		
+		# Read the next byte/character	
+		val = ser.read(1)
+	
+	# Read the next 2 bytes to clear out the enter key
+	val = ser.read(2)
+	
+	# Print the input string for verification			
+	print(line)
+	
+	# Split the input string at the spaces to separate data
+	values = line.split(" ")
+	
+	# Include error checking that checks that the indexed element will actually exist based on splits at " " and "_"
+	# Note: the final enter \r\n isn't included in calculating len(line)
+		
+	# Reset error flag to off
+	error = 0
+	
+	if len(line) == 152:
+		print("correct length")
+			
+		if line[2] == "_":
+			print("01 correct")
+			self.blueLed1Text.set(values[0].split("_")[1])
+		else:
+			print("Return string: wrong format 01")
+			error = 1
+			
+		if line[9] == "_" and line[6] == " ":
+			print("02 correct")
+			self.blueLed2Text.set(values[1].split("_")[1])
+		else:
+			print("Return string: wrong format 02")
+			error = 1
+			
+		if line[16] == "_" and line[13] == " ":
+			print("03 correct")
+			self.blueLed3Text.set(values[2].split("_")[1])
+		else:
+			print("Return string: wrong format 03")
+			error = 1
+		
+		if line[23] == "_" and line[20] == " ":
+			print("04 correct")
+			self.redLed1Text.set(values[3].split("_")[1])
+		else:
+			print("Return string: wrong format 04")
+			error = 1
+		
+		if line[30] == "_" and line[27] == " ":
+			print("05 correct")
+			self.redLed2Text.set(values[4].split("_")[1])
+		else:
+			print("Return string: wrong format 05")
+			error = 1
+		
+		if line[37] == "_" and line[34] == " ":
+			print("06 correct")
+			self.redLed3Text.set(values[5].split("_")[1])
+		else:
+			print("Return string: wrong format 06")
+			error = 1		
+		
+		if line[44] == "_" and line[41] == " ":
+			print("07 correct")
+			self.insideTempText.set(values[6].split("_")[1])
+		else:
+			print("Return string: wrong format 07")
+			error = 1
+						
+		if line[51] == "_" and line[48] == " ":
+			print("08 correct")
+			self.waterTempText.set(values[7].split("_")[1])
+		else:
+			print("Return string: wrong format 08")
+			error = 1
+		
+		if line[84] == "_" and line[81] == " ":
+			print("11 correct")
+			self.flowMeter.set(str(float(values[10].split("_")[1])/10))
+		else:
+			print("Return string: wrong format 10")
+			error = 1
+		
+		if line[91] == "_" and line[88] == " ":
+			print("12 correct")
+			self.averageTemp1.set(values[11].split("_")[1])
+			
+			# Extract value for Data Logging
+			airAvTemp = values[11].split("_")[1]
+			
+		else:
+			print("Return string: wrong format 11")
+			error = 1
+			
+		if line[98] == "_" and line[95] == " ":
+			print("13 correct")
+			self.averageTemp2.set(values[12].split("_")[1])
+		else:
+			print("Return string: wrong format 13")
+			error = 1
+			
+		if line[105] == "_" and line[102] == " ":
+			print("14 correct")
+		else:
+			print("Return string: wrong format 14")
+			error = 1
+			
+		if line[112] == "_" and line[109] == " ":
+			print("15 correct")
+			seconds = values[14].split("_")[1]
+		else:
+			print("Return string: wrong format 15")
+			error = 1
+			
+		if line[119] == "_" and line[116] == " ":
+			print("16 correct")
+			minutes = values[15].split("_")[1]
+		else:
+			print("Return string: wrong format 16")
+			error = 1
+			
+		if line[126] == "_" and line[123] == " ":
+			print("17 correct")
+			hours = values[16].split("_")[1]
+		else:
+			print("Return string: wrong format 17")
+			error = 1
+			
+		if line[133] == "_" and line[130] == " ":
+			print("18 correct")
+			days = values[17].split("_")[1]
+		else:
+			print("Return string: wrong format 18")
+			error = 1
+			
+		if line[140] == "_" and line[137] == " ":
+			print("19 correct")
+			months = values[18].split("_")[1]
+		else:
+			print("Return string: wrong format 19")
+			error = 1
+			
+		if line[147] == "_" and line[144] == " ":
+			print("20 correct")
+			years = values[19].split("_")[1]
+		else:
+			print("Return string: wrong format 20")
+			error = 1
+				
+	else:
+			print("Return string: wrong length")
+			error = 1	
+	
+	# If any errors occured print an error flag
+	if error == 1:
+		print("Error Flag")
 
-window.after(2000, task)
+
+	# Convert all external RTC component (Real-Time Clock) time values to seconds
+	secondsData = str(int(seconds) + int(minutes)*60 + int(hours)*60*60 + int(days)*60*60*24)
+	
+	# Concatentate the string in comma separated format for Excel
+	# Note: enter means a new row in Excel (no choice)
+	# Note: comma means a new column in Excel (choice, could also be a tab, etc)
+	# Note: data structure wrt columns is (time, value) for Excel graphing
+	msg = secondsData + "," + airAvTemp + "\r\n"
+	
+	# Print the message for verification
+	print(msg)
+	
+	# Write the data with the correct format into the file
+	text_file.write(msg)
+	
+	# Close the file each time so that the writing is saved
+	text_file.close()
+	
+# Iterate the repetitive function call
+# Note: wait 6 seconds as the Arduino is slightly faster the first time, causing time measurement to be 4, 9, 14, 19, ...
+# Note: this allows time measurements to be a nicer 5, 10, 15, 20, ...	
+window.after(6000, textFileWrite)
 
 # Run the GUI until quitting
 window.mainloop()
+
+
