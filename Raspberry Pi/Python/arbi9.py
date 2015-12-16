@@ -24,11 +24,11 @@ def BlueLed1Set():
 		
 	input = blueLed1Input.get()
 		
-	while (len(input) < 4):
+	while (len(input) < 5):
 		input = "0" + input
 			
 	print("14_" + input + "\r\n")
-	ser.write("01_" + input + "\r\n")	
+	ser.write("14_" + input + "\r\n")	
 
 
 
@@ -37,11 +37,11 @@ def BlueLed2Set():
 
 	input = blueLed2Input.get()
 		
-	while (len(input) < 4):
+	while (len(input) < 5):
 		input = "0" + input
 			
 	print("15_" + input + "\r\n")
-	ser.write("02_" + input + "\r\n")	
+	ser.write("15_" + input + "\r\n")	
 			
 
 
@@ -50,7 +50,7 @@ def BlueLed3Set():
 
 	input = blueLed3Input.get()
 		
-	while (len(input) < 4):
+	while (len(input) < 5):
 		input = "0" + input
 			
 	print("16_" + input + "\r\n")
@@ -63,7 +63,7 @@ def RedLed1Set():
 		
 	input = redLed1Input.get()
 		
-	while (len(input) < 4):
+	while (len(input) < 5):
 		input = "0" + input
 			
 	print("17_" + input + "\r\n")
@@ -76,7 +76,7 @@ def RedLed2Set():
 
 	input = redLed2Input.get()
 		
-	while (len(input) < 4):
+	while (len(input) < 5):
 		input = "0" + input
 			
 	print("18_" + input + "\r\n")
@@ -89,7 +89,7 @@ def RedLed3Set():
 		
 	input = redLed3Input.get()
 		
-	while (len(input) < 4):
+	while (len(input) < 5):
 		input = "0" + input
 			
 	print("19_" + input + "\r\n")
@@ -169,8 +169,8 @@ def FlashStatusToggle():
 		ledOffTimeInput.delete(0, END)
 		ledOffTimeInput.insert(END, "On")
 		
-		print("13_1")
-		ser.write("13_1")
+		print("13_1\r\n")
+		ser.write("13_1\r\n")
 			
 	elif (flashStatusText.get() == "On"):
 			
@@ -182,8 +182,8 @@ def FlashStatusToggle():
 		ledOffTimeInput.delete(0, END)
 		ledOffTimeInput.insert(END, "Off")
 		
-		print("13_2")
-		ser.write("13_2")
+		print("13_2\r\n")
+		ser.write("13_2\r\n")
 			
 	else:
 			
@@ -195,8 +195,8 @@ def FlashStatusToggle():
 		ledOffTimeInput.delete(0, END)
 		ledOffTimeInput.insert(END, "1")
 		
-		print("13_0")
-		ser.write("13_0")
+		print("13_0\r\n")
+		ser.write("13_0\r\n")
 		
 		# Also send signal for default on time = 1 and off time = 1 when toggled back to flash mode
 		LedOnTimeSet()
@@ -259,7 +259,7 @@ def WriteToTextFile():
 	
 	# Call this function to run again
 	# Note: this is a self-iterating process
-	root.after(20000, WriteToTextFile)
+	root.after(10000, WriteToTextFile)
 	
 	# Receive data from Arduino into an input string
 	line = ReceiveBuffer()
@@ -974,7 +974,7 @@ for y in range(22):
 ### ***** Post-initialisation code ***** ###
 			
 # Initialise the repetitive function call for data logging
-root.after(20000, WriteToTextFile)
+root.after(10000, WriteToTextFile)
 			
 # Open a text file in writing "w" mode
 # Note: opening in writing mode means that all data in the previous version of the file is overwritten
