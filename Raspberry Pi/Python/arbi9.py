@@ -211,7 +211,7 @@ def SendBuffer():
 	ser.write("99_000\r\n")
 		
 	# Wait for the data to be received from the Arduino
-	time.sleep(1)
+	time.sleep(4)
 	
 	
 
@@ -252,14 +252,13 @@ def WriteToTextFile():
 	# Note: This is required as "w" writing mode overwrites the previous file once it is closed an re-opened.
 	# Note: we want to add the next set of data to the pre-existing list, which is what append mode does.
 	text_file = open("arbi9_text.txt", "a")
-	
-	
+		
 	# Send signal to receive data from Arduino
 	SendBuffer()
 	
 	# Call this function to run again
 	# Note: this is a self-iterating process
-	root.after(10000, WriteToTextFile)
+	root.after(45000, WriteToTextFile)
 	
 	# Receive data from Arduino into an input string
 	line = ReceiveBuffer()
@@ -275,14 +274,24 @@ def WriteToTextFile():
 		values = line.split(" ")
 		
 		# Extract data
-		insideTempSensor1 = values[0].split("_")[1]
-		insideTempSensor2 = values[1].split("_")[1]
-		insideTempSensor3 = values[2].split("_")[1]
-		insideTempSensor4 = values[3].split("_")[1]
-		insideTempSensor5 = values[4].split("_")[1]
-		insideTempSensor6 = values[5].split("_")[1]
-		waterTempSensor1 = values[6].split("_")[1]
-		waterTempSensor2 = values[7].split("_")[1]
+		
+		# Put temperature data into decimal format
+		insideTempSensor1 = values[0].split("_")[1][0] + values[0].split("_")[1][1] + \
+		"." + values[0].split("_")[1][2] + values[0].split("_")[1][3]
+		insideTempSensor2 = values[1].split("_")[1][0] + values[1].split("_")[1][1] + \
+		"." + values[1].split("_")[1][2] + values[1].split("_")[1][3]
+		insideTempSensor3 = values[2].split("_")[1][0] + values[2].split("_")[1][1] + \
+		"." + values[2].split("_")[1][2] + values[2].split("_")[1][3]
+		insideTempSensor4 = values[3].split("_")[1][0] + values[3].split("_")[1][1] + \
+		"." + values[3].split("_")[1][2] + values[3].split("_")[1][3]
+		insideTempSensor5 = values[4].split("_")[1][0] + values[4].split("_")[1][1] + \
+		"." + values[4].split("_")[1][2] + values[4].split("_")[1][3]
+		insideTempSensor6 = values[5].split("_")[1][0] + values[5].split("_")[1][1] + \
+		"." + values[5].split("_")[1][2] + values[5].split("_")[1][3]
+		waterTempSensor1 = values[6].split("_")[1][0] + values[6].split("_")[1][1] + \
+		"." + values[6].split("_")[1][2] + values[6].split("_")[1][3]
+		waterTempSensor2 = values[7].split("_")[1][0] + values[7].split("_")[1][1] + \
+		"." + values[7].split("_")[1][2] + values[7].split("_")[1][3]
 		
 		blueLed1 = values[19].split("_")[1]
 		blueLed2 = values[20].split("_")[1]
@@ -304,7 +313,7 @@ def WriteToTextFile():
 		secondsData = str(int(seconds) + int(minutes)*60 + \
 		int(hours)*60*60 + int(days)*60*60*24+int(months)*60*60*24*12 + \
 		int(years)*60*60*24*12*365)
-	
+		
 		# Concatentate the string in comma separated format for Excel
 		# Note: enter means a new row in Excel (no choice)
 		# Note: comma means a new column in Excel (choice, could also be a tab, etc)
@@ -346,14 +355,22 @@ def UpdateCurrentValues():
 		values = line.split(" ")
 		
 		# Update data
-		insideTemp1Text.set(values[0].split("_")[1])
-		insideTemp2Text.set(values[1].split("_")[1])
-		insideTemp3Text.set(values[2].split("_")[1])
-		insideTemp4Text.set(values[3].split("_")[1])
-		insideTemp5Text.set(values[4].split("_")[1])
-		insideTemp6Text.set(values[5].split("_")[1])
-		waterTemp1Text.set(values[6].split("_")[1])
-		waterTemp2Text.set(values[7].split("_")[1])
+		insideTemp1Text.set(values[0].split("_")[1][0] + values[0].split("_")[1][1] + \
+		"." + values[0].split("_")[1][2] + values[0].split("_")[1][3])
+		insideTemp2Text.set(values[1].split("_")[1][0] + values[1].split("_")[1][1] + \
+		"." + values[1].split("_")[1][2] + values[1].split("_")[1][3])
+		insideTemp3Text.set(values[2].split("_")[1][0] + values[2].split("_")[1][1] + \
+		"." + values[2].split("_")[1][2] + values[2].split("_")[1][3])
+		insideTemp4Text.set(values[3].split("_")[1][0] + values[3].split("_")[1][1] + \
+		"." + values[3].split("_")[1][2] + values[3].split("_")[1][3])
+		insideTemp5Text.set(values[4].split("_")[1][0] + values[4].split("_")[1][1] + \
+		"." + values[4].split("_")[1][2] + values[4].split("_")[1][3])
+		insideTemp6Text.set(values[5].split("_")[1][0] + values[5].split("_")[1][1] + \
+		"." + values[5].split("_")[1][2] + values[5].split("_")[1][3])
+		waterTemp1Text.set(values[6].split("_")[1][0] + values[6].split("_")[1][1] + \
+		"." + values[6].split("_")[1][2] + values[6].split("_")[1][3])
+		waterTemp2Text.set(values[7].split("_")[1][0] + values[7].split("_")[1][1] + \
+		"." + values[7].split("_")[1][2] + values[7].split("_")[1][3])
 		
 		blueLed1Text.set(values[19].split("_")[1])
 		blueLed2Text.set(values[20].split("_")[1])
@@ -681,7 +698,6 @@ blueLed3Input.grid(row = 3, column = 3, padx = 20)
 redLed1Label = Label(frame, text = "Red LED 1 Intensity (Lux):")
 redLed1Label.grid(row = 4, column = 0, sticky = N+S+E+W)
 
-
 # Current value label (with variable text)
 redLed1Text = StringVar()
 redLed1Value = Label(frame, textvariable = redLed1Text, bg = "white")
@@ -695,6 +711,7 @@ redLed1Button.grid(row = 4, column = 2, sticky = N+S+E+W)
 redLed1Input = Entry(frame)
 redLed1Input.insert(END, "128")
 redLed1Input.grid(row = 4, column = 3, padx = 20)
+
 
 
 ### ***** Red LED 2 Widgets ***** ###
@@ -716,6 +733,7 @@ redLed2Button.grid(row = 5, column = 2, sticky = N+S+E+W)
 redLed2Input = Entry(frame)
 redLed2Input.insert(END, "128")
 redLed2Input.grid(row = 5, column = 3, padx = 20)
+
 
 
 ### ***** Red LED 3 Widgets ***** ###
@@ -974,7 +992,7 @@ for y in range(22):
 ### ***** Post-initialisation code ***** ###
 			
 # Initialise the repetitive function call for data logging
-root.after(10000, WriteToTextFile)
+root.after(45000, WriteToTextFile)
 			
 # Open a text file in writing "w" mode
 # Note: opening in writing mode means that all data in the previous version of the file is overwritten
