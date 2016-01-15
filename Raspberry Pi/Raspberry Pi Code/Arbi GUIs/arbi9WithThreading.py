@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#!/usr/bin/env python
 
 ##### *************** Initialisation Code *************** #####
 
@@ -8,6 +9,7 @@ from Tkinter import *
 import serial
 ser = serial.Serial('/dev/ttyACM0', 9600)
 import time
+import threading
 
 # Start a new GUI																												
 root = Tk()
@@ -206,12 +208,23 @@ def FlashStatusToggle():
 
 # Function for sending signal to receive data from Arduino
 def SendBuffer():
-
+	
 	# Send the signal to the Arduino to send the Raspberry Pi all data
 	ser.write("99_000\r\n")
-		
+	
+	while msgEnd == 0:
+	if ser.inWaiting() != 0:
+		val = ser.read(1)
+
+		if ((val != "\r") and (val != "\n")):
+			line += val
+			
+		if val == "\n":
+			msgEnd = 1
+			print line
+			
 	# Wait for the data to be received from the Arduino
-	time.sleep(4)
+	time.sleep(5)
 	
 	
 
@@ -219,17 +232,19 @@ def SendBuffer():
 # Returns input string 'line'
 def ReceiveBuffer():
 	
+	print "Hi receive"
 	# Read the first byte and initialise the input string
 	val = ser.read(1)
+	print "val"
 	line = ""
-	
+
 	# While the enter signifying the end of the transmission string has not been encountered
 	while val not in ["\n"]:
 		
 		# If it is not the carraige return immeadiately before the new line (in the enter)
 		if val != "\r":
 			line += val
-		
+		print line
 		# Read the next byte/character	
 		val = ser.read(1)
 	
@@ -241,97 +256,104 @@ def ReceiveBuffer():
 	
 	# Return line variable to function call
 	return line
+	print "bye receive"
 
 		
 			
 # Function called for writing to the text file
 def WriteToTextFile():
+
+
 	
-	# Open the text file each time since we close it each time
-	# Note: "a" means opening the text file in append mode. 
-	# Note: This is required as "w" writing mode overwrites the previous file once it is closed an re-opened.
-	# Note: we want to add the next set of data to the pre-existing list, which is what append mode does.
-	text_file = open("arbi9_text.txt", "a")
+	while 1:
+
+		print "Hi"
+
+		# Open the text file each time since we close it each time
+		# Note: "a" means opening the text file in append mode. 
+		# Note: This is required as "w" writing mode overwrites the previous file once it is closed an re-opened.
+		# Note: we want to add the next set of data to the pre-existing list, which is what append mode does.
+		text_file = open("arbi9_text.txt", "a")
+			
+		# Send signal to receive data from Arduino
+		SendBuffer()
 		
-	# Send signal to receive data from Arduino
-	SendBuffer()
-	
-	# Call this function to run again
-	# Note: this is a self-iterating process
-	root.after(45000, WriteToTextFile)
-	
-	# Receive data from Arduino into an input string
-	line = ReceiveBuffer()
-	
-	# Call error checking function without updating current values
-	# Note: the final enter \r\n contributes 1 unit to the length of the line
-	error = ErrorCheck(line)
-	
-	# Log data if no errors occured
-	if error == 0:
+		# Call this function to run again
+		# Note: this is a self-iterating process
 		
-		# Split the input string at the spaces to separate data
-		values = line.split(" ")
+		# Receive data from Arduino into an input string
+		line = ReceiveBuffer()
 		
-		# Extract data
+		# Call error checking function without updating current values
+		# Note: the final enter \r\n contributes 1 unit to the length of the line
+		error = ErrorCheck(line)
 		
-		# Put temperature data into decimal format
-		insideTempSensor1 = values[0].split("_")[1][0] + values[0].split("_")[1][1] + \
-		"." + values[0].split("_")[1][2] + values[0].split("_")[1][3]
-		insideTempSensor2 = values[1].split("_")[1][0] + values[1].split("_")[1][1] + \
-		"." + values[1].split("_")[1][2] + values[1].split("_")[1][3]
-		insideTempSensor3 = values[2].split("_")[1][0] + values[2].split("_")[1][1] + \
-		"." + values[2].split("_")[1][2] + values[2].split("_")[1][3]
-		insideTempSensor4 = values[3].split("_")[1][0] + values[3].split("_")[1][1] + \
-		"." + values[3].split("_")[1][2] + values[3].split("_")[1][3]
-		insideTempSensor5 = values[4].split("_")[1][0] + values[4].split("_")[1][1] + \
-		"." + values[4].split("_")[1][2] + values[4].split("_")[1][3]
-		insideTempSensor6 = values[5].split("_")[1][0] + values[5].split("_")[1][1] + \
-		"." + values[5].split("_")[1][2] + values[5].split("_")[1][3]
-		waterTempSensor1 = values[6].split("_")[1][0] + values[6].split("_")[1][1] + \
-		"." + values[6].split("_")[1][2] + values[6].split("_")[1][3]
-		waterTempSensor2 = values[7].split("_")[1][0] + values[7].split("_")[1][1] + \
-		"." + values[7].split("_")[1][2] + values[7].split("_")[1][3]
+		# Log data if no errors occured
+		if error == 0:
+			
+			# Split the input string at the spaces to separate data
+			values = line.split(" ")
+			
+			# Extract data
+			
+			# Put temperature data into decimal format
+			insideTempSensor1 = values[0].split("_")[1][0] + values[0].split("_")[1][1] + \
+			"." + values[0].split("_")[1][2] + values[0].split("_")[1][3]
+			insideTempSensor2 = values[1].split("_")[1][0] + values[1].split("_")[1][1] + \
+			"." + values[1].split("_")[1][2] + values[1].split("_")[1][3]
+			insideTempSensor3 = values[2].split("_")[1][0] + values[2].split("_")[1][1] + \
+			"." + values[2].split("_")[1][2] + values[2].split("_")[1][3]
+			insideTempSensor4 = values[3].split("_")[1][0] + values[3].split("_")[1][1] + \
+			"." + values[3].split("_")[1][2] + values[3].split("_")[1][3]
+			insideTempSensor5 = values[4].split("_")[1][0] + values[4].split("_")[1][1] + \
+			"." + values[4].split("_")[1][2] + values[4].split("_")[1][3]
+			insideTempSensor6 = values[5].split("_")[1][0] + values[5].split("_")[1][1] + \
+			"." + values[5].split("_")[1][2] + values[5].split("_")[1][3]
+			waterTempSensor1 = values[6].split("_")[1][0] + values[6].split("_")[1][1] + \
+			"." + values[6].split("_")[1][2] + values[6].split("_")[1][3]
+			waterTempSensor2 = values[7].split("_")[1][0] + values[7].split("_")[1][1] + \
+			"." + values[7].split("_")[1][2] + values[7].split("_")[1][3]
+			
+			blueLed1 = values[19].split("_")[1]
+			blueLed2 = values[20].split("_")[1]
+			blueLed3 = values[21].split("_")[1]
+			redLed1 = values[22].split("_")[1]
+			redLed2 = values[23].split("_")[1]
+			redLed3 = values[24].split("_")[1]
+			
+			flowRate = values[31].split("_")[1]
+			
+			seconds = values[25].split("_")[1]
+			minutes = values[26].split("_")[1]
+			hours = values[27].split("_")[1]
+			days = values[28].split("_")[1]
+			months = values[29].split("_")[1]
+			years = values[30].split("_")[1]		
+					
+			# Convert all external RTC component time values to seconds
+			secondsData = str(int(seconds) + int(minutes)*60 + \
+			int(hours)*60*60 + int(days)*60*60*24+int(months)*60*60*24*12 + \
+			int(years)*60*60*24*12*365)
+			
+			# Concatentate the string in comma separated format for Excel
+			# Note: enter means a new row in Excel (no choice)
+			# Note: comma means a new column in Excel (choice, could also be a tab, etc)
+			# Note: data structure wrt columns is (time, value) for Excel graphing
+			msg = secondsData + "," + insideTempSensor1 + ',' + insideTempSensor2 + \
+			',' + insideTempSensor3 + ',' + insideTempSensor4 + ',' + insideTempSensor5 + \
+			',' + insideTempSensor6 + ',' + waterTempSensor1 + ',' + waterTempSensor2 + \
+			',' + blueLed1 + ',' + blueLed2 + ',' + blueLed3 + ',' + redLed1 + ',' + redLed2 + \
+			',' + redLed3 + ',' + flowRate + "\r\n"
 		
-		blueLed1 = values[19].split("_")[1]
-		blueLed2 = values[20].split("_")[1]
-		blueLed3 = values[21].split("_")[1]
-		redLed1 = values[22].split("_")[1]
-		redLed2 = values[23].split("_")[1]
-		redLed3 = values[24].split("_")[1]
+			# Print the message for verification
+			print("\r\n" + msg)
 		
-		flowRate = values[31].split("_")[1]
+			# Write the data with the correct format into the file
+			text_file.write(msg)
 		
-		seconds = values[25].split("_")[1]
-		minutes = values[26].split("_")[1]
-		hours = values[27].split("_")[1]
-		days = values[28].split("_")[1]
-		months = values[29].split("_")[1]
-		years = values[30].split("_")[1]		
-				
-		# Convert all external RTC component time values to seconds
-		secondsData = str(int(seconds) + int(minutes)*60 + \
-		int(hours)*60*60 + int(days)*60*60*24+int(months)*60*60*24*12 + \
-		int(years)*60*60*24*12*365)
+			# Close the file each time so that the writing is saved
+			text_file.close()
 		
-		# Concatentate the string in comma separated format for Excel
-		# Note: enter means a new row in Excel (no choice)
-		# Note: comma means a new column in Excel (choice, could also be a tab, etc)
-		# Note: data structure wrt columns is (time, value) for Excel graphing
-		msg = secondsData + "," + insideTempSensor1 + ',' + insideTempSensor2 + \
-		',' + insideTempSensor3 + ',' + insideTempSensor4 + ',' + insideTempSensor5 + \
-		',' + insideTempSensor6 + ',' + waterTempSensor1 + ',' + waterTempSensor2 + \
-		',' + blueLed1 + ',' + blueLed2 + ',' + blueLed3 + ',' + redLed1 + ',' + redLed2 + \
-		',' + redLed3 + ',' + flowRate + "\r\n"
-	
-		# Print the message for verification
-		print("\r\n" + msg)
-	
-		# Write the data with the correct format into the file
-		text_file.write(msg)
-	
-		# Close the file each time so that the writing is saved
-		text_file.close()
 	
 	
 
@@ -991,13 +1013,14 @@ for y in range(22):
 
 ### ***** Post-initialisation code ***** ###
 			
-# Initialise the repetitive function call for data logging
-root.after(45000, WriteToTextFile)
-			
+	
 # Open a text file in writing "w" mode
 # Note: opening in writing mode means that all data in the previous version of the file is overwritten
 # Note: this is helpful as the text file can be restarted every time the GUI session restarts
 text_file = open("arbi9_text.txt", "w")
+
+t = threading.Thread(target = WriteToTextFile)
+t.start()
 
 # Run the GUI until quitting
 root.mainloop()

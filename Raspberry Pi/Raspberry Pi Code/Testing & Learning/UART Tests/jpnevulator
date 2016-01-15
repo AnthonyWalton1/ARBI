@@ -1,0 +1,4 @@
+sudo apt-get install jpnevulator
+
+
+jpnevulator --ascii --timing-print --tty /dev/tty/AMA0 --tty /dev/ttyACMO

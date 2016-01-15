@@ -649,3 +649,5 @@ text_file = open("arbi5_text.txt", "w")
 window.mainloop()
 
 
+
+
