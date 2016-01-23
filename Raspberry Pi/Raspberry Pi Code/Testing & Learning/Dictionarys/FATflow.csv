@@ -1,0 +1,6 @@
+Flow,ConditionFxn,ConditionValues,Yes,No
+1,hasTimePassed,HAT_120,1,#
+2,sensorReading,FL301_100,2,#
+3,noCondition,No,#,3
+4,noCondition,Yes,4,#
+5,sensorReading,FL301_9000,5,#
