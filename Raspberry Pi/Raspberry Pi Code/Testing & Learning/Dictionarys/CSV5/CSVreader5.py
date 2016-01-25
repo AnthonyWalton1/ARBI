@@ -178,9 +178,9 @@ class CSVFlowclass:
 				
 			
 			
-taskCSVInstance = TaskCSV.TaskCSVclass("CSV4Task.csv", "Step")
+taskCSVInstance = TaskCSV.TaskCSVclass("CSV5Task.csv", "Step")
 taskCSVDict = taskCSVInstance.returnDictOfTaskCSV()
-flow1 = CSVFlowclass("CSV4Flow.csv", "Flow")
+flow1 = CSVFlowclass("CSV5Flow.csv", "Flow")
 times = 0
 
 while True:
