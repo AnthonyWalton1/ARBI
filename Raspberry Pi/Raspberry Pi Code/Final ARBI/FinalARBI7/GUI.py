@@ -3,7 +3,7 @@
 # Import headers/modules
 from Tkinter import *
 
-class GUIclass:
+class GUIclass(object):
 	
 	def __init__(self, GUItitle):
 		

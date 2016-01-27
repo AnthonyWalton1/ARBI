@@ -20,7 +20,8 @@ class AIclass:
 		self.ArbiDataLogger = DataLogger.DataLoggerclass("maintextfile.txt")
 		self.ArbiDataLogger.clearFile()
 
-		self.ArbiUART = UART.UARTclass()
+		self.ArbiUARTACM0 = UART.UARTclass("/dev/ttyACM0", 9600)
+		self.ArbiUARTACM1 = UART.UARTclass("/dev/ttyACM1", 9600)
 				
 		# Intialise start-time reference in milliseconds
 		self.startTime = millis.millis()
@@ -29,9 +30,23 @@ class AIclass:
 		
 		self.ArbiDataLogger.logData(text)
 		
-	def AIserialWrite(self, line):
+	def AIserialWriteACM0(self, line):
 		
-		returnLine = self.ArbiUART.serialWrite(line)
+		self.ArbiUARTACM0.serialWrite(line)
+	
+	def AIserialReceiveACM0(self):
+		
+		returnLine = self.ArbiUARTACM0.serialReceive()
+		
+		return returnLine	
+
+	def AIserialWriteACM1(self, line):
+		
+		self.ArbiUARTACM1.serialWrite(line)
+	
+	def AIserialReceiveACM1(self):
+		
+		returnLine = self.ArbiUARTACM1.serialReceive()
 		
 		return returnLine
 	
@@ -69,11 +84,12 @@ class AIclass:
 		print measurements
 	
 	def feedAlgae(self):
-		print "feedAlgae"
-		
-	def harvestAlgae(self):
-		print "harvestAlgae"
+		print "feedalgae"
 				
+	def harvestAlgae(self):
+		print "harvestalgae"
+			
+	
 	def harvestRotifers(self):
 		print "harvestRotifers"
 		

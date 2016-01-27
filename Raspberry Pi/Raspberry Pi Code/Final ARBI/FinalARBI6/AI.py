@@ -6,8 +6,9 @@ import GUI
 import DataLogger
 import UART
 import millis
+import globalvariables
 
-class AIclass:
+class AIclass(object):
 	
 	def __init__(self, AInumber):
 		
@@ -31,10 +32,14 @@ class AIclass:
 		
 	def AIserialWrite(self, line):
 		
-		returnLine = self.ArbiUART.serialWrite(line)
-		
-		return returnLine
+		self.ArbiUART.serialWrite(line)
 	
+	def AIserialReceive(self):
+		
+		returnLine = self.ArbiUART.serialReceive()
+		
+		return returnLine	
+
 	def status(self):
 		
 		# Use a dictionary (dict) to store values with indexes that can be names
@@ -66,14 +71,15 @@ class AIclass:
 		return measurements
 				
 	def decide(self, measurements):
-		print measurements
+		pass
 	
 	def feedAlgae(self):
-		print "feedAlgae"
-		
-	def harvestAlgae(self):
-		print "harvestAlgae"
+		print "feedalgae"
 				
+	def harvestAlgae(self):
+		print "harvestalgae"
+			
+	
 	def harvestRotifers(self):
 		print "harvestRotifers"
 		

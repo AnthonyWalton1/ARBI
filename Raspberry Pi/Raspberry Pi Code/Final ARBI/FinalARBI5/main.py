@@ -15,7 +15,7 @@ def main():
 	
 	# Main loop (poll forever)
 	while True:
-		
+
 		# Pause to slow down polling speed (for testing)
 		time.sleep(1)
 		
@@ -25,9 +25,15 @@ def main():
 		# AI can decide what to do next based on measurements
 		ArbiAI.decide(measurements)
 		
-		line = ArbiAI.AIserialWrite("Msg for serial write\r\n")
+		ArbiAI.AIserialWriteACM0("Msg for serial write\r\n")
 		
+		line = ArbiAI.AIserialReceiveACM0()
 		print line
+		
+		ArbiAI.AIserialWriteACM1("Msg for serial write\r\n")
+		
+		line2 = ArbiAI.AIserialReceiveACM1()
+		print line2
 
 		# Log data
 		ArbiAI.AIlogData(str(measurements))	

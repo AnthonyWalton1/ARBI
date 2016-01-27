@@ -1,0 +1,6 @@
+Flow,ConditionFxn,ConditionValues,YesOperation,YesParameter,YesNextStepInThisFlowChart,NoOperation,NoParameter,NoNextStepInThisFlowChart
+1,HasTimePassed,HAT_30,OutputValues,10,3,goToAStepInThisFlowChart,goToAStepInThisFlowChart,1
+2,SensorReading,FL301_100,OutputValues,12,4,goToAStepInThisFlowChart,goToAStepInThisFlowChart,2
+3,NoCondition,Yes,OutputValues,5,2,goToAStepInThisFlowChart,goToAStepInThisFlowChart,3
+4,NoCondition,Yes,OutputValues,1,5,goToAStepInThisFlowChart,goToAStepInThisFlowChart,4
+5,SensorReading,FL301_9000,OutputValues,3,Finished,goToAStepInThisFlowChart,goToAStepInThisFlowChart,5

@@ -13,6 +13,7 @@ HATstarttime = millis()
 	
 timers = {"HAT" : HATstarttime}
 machineState = {"FCV301" : "0", "V201a" : "0", "V201b" :"0", "V301" : "0", "V302" : "0", "heya" : "1", "FL301" : 30}
+handshakes = {"FCV301" : "", "V201a" : "", "V201b" :"", "V301" : "", "V302" : "", "heya" : ""}
 
 
 
@@ -35,8 +36,10 @@ class CSVFlowclass:
 			self.csvDict[self.key] = self.row
 
 		self.machineItemsToChange = []
-		self.hasMachineStateBeenImplemented = {}
+		self.handshakeState = {}
 		self.waitingForHandshake = 0
+
+
 
 	def hasTimePassed(self):
 		
@@ -46,6 +49,10 @@ class CSVFlowclass:
 		self.referenceTime = timers[self.timerReference]
 		
 		self.timedif = millis() - self.referenceTime
+		
+		print "timer"
+		print self.timedif
+		print self.timewait
 		
 		if int(self.timedif) > int(self.timewait):
 			return "Yes"
@@ -61,6 +68,10 @@ class CSVFlowclass:
 		self.sensorRequiredValue = self.csvDict[self.flowChartStep]["ConditionValues"].split("_")[1]
 			
 		self.sensorValue = machineState[self.sensorID]
+		
+		print "sensor"
+		print self.sensorValue
+		print self.sensorRequiredValue
 		
 		if int(self.sensorValue) > int(self.sensorRequiredValue):
 			return "Yes"
@@ -80,6 +91,7 @@ class CSVFlowclass:
 			
 		if self.csvDict[self.flowChartStep]["ConditionFxn"] == "NoCondition":			
 			self.flowChartConditionState = "Yes"
+			print "nocondition"
 			
 		return self.flowChartConditionState
 		
@@ -115,6 +127,8 @@ class CSVFlowclass:
 		
 		self.tableStepNumber = tableStepNumber
 		self.tableStep = taskCSVDict[self.tableStepNumber]
+
+		self.machineItemsToChange = []
 		
 		for self.machineItem in self.tableStep:		
 			if self.tableStep[self.machineItem] != "X":
@@ -124,15 +138,16 @@ class CSVFlowclass:
 			if self.waitingForHandshake == 0:		
 				print "6: " + self.machineItem + " " + self.tableStep[self.machineItem]
 		
-			if self.tableStep[self.machineItem].split("_")[1] == machineState[self.machineItem]:
-				self.hasMachineStateBeenImplemented[self.machineItem] = 1
-			else:
-				self.hasMachineStateBeenImplemented[self.machineItem] = 0
-				
-		self.machineItemsToChange = []
+		print "handshakes: " + str(handshakes)
 		
-		if all(self.hasMachineStateBeenImplemented[self.machineItem] == 1 for self.machineItem in self.hasMachineStateBeenImplemented):
+		if all(handshakes[self.machineItem] == "1" for self.machineItem in self.machineItemsToChange):
 			self.waitingForHandshake = 0
+			
+			for self.machineItem in self.machineItemsToChange:
+				handshakes[self.machineItem] = ""
+			
+			print "handshakes: " + str(handshakes)
+			
 			return "complete"
 		
 		else:
@@ -178,32 +193,39 @@ class CSVFlowclass:
 				
 			
 			
-taskCSVInstance = TaskCSV.TaskCSVclass("CSV5Task.csv", "Step")
+taskCSVInstance = TaskCSV.TaskCSVclass("CSV6Task.csv", "Step")
 taskCSVDict = taskCSVInstance.returnDictOfTaskCSV()
-flow1 = CSVFlowclass("CSV5Flow.csv", "Flow")
+flow1 = CSVFlowclass("CSV6Flow.csv", "Flow")
 times = 0
 
 while True:
 	times = times + 1
 	if times == 2:
 		machineState = {"FCV301" : "0", "V201a" : "0", "V201b" :"0", "V301" : "0", "V302" : "0", "heya" : "1", "FL301" : "30"}
+		handshakes = {"FCV301" : "1", "V201a" : "1", "V201b" :"1", "V301" : "1", "V302" : "1", "heya" : "0"}
 	if times == 6:
 		machineState = {"FCV301" : "1", "V201a" : "1", "V201b" :"1", "V301" : "1", "V302" : "1", "heya" : "1", "FL301" : "30"}
+		handshakes = {"FCV301" : "1", "V201a" : "1", "V201b" :"1", "V301" : "1", "V302" : "1", "heya" : "1"}
 	if times == 9:
 		machineState = {"FCV301" : "1", "V201a" : "0", "V201b" :"1", "V301" : "0", "V302" : "0", "heya" : "1", "FL301" : "200"}
+		handshakes = {"FCV301" : "1", "V201a" : "0", "V201b" :"1", "V301" : "1", "V302" : "0", "heya" : "1"} #make handshake wrong
 	if times == 10:
 		machineState = {"FCV301" : "1", "V201a" : "0", "V201b" :"0", "V301" : "0", "V302" : "0", "heya" : "1", "FL301" : "200"}
+		handshakes = {"FCV301" : "1", "V201a" : "1", "V201b" :"1", "V301" : "1", "V302" : "1", "heya" : "1"}
 	if times == 12:
 		machineState = {"FCV301" : "1", "V201a" : "1", "V201b" :"0", "V301" : "0", "V302" : "0", "heya" : "1", "FL301" : "30"}
+		handshakes = {"FCV301" : "1", "V201a" : "1", "V201b" :"1", "V301" : "1", "V302" : "1", "heya" : "1"}
 	if times == 15:
 		machineState = {"FCV301" : "1", "V201a" : "1", "V201b" :"0", "V301" : "0", "V302" : "0", "heya" : "1", "FL301" : "10000"}
+		handshakes = {"FCV301" : "1", "V201a" : "1", "V201b" :"1", "V301" : "0", "V302" : "1", "heya" : ""} # make handshake wrong
 	if times == 17:
-		machineState = {"FCV301" : "1", "V201a" : "0", "V201b" :"0", "V301" : "0", "V302" : "0", "heya" : "1", "FL301" : "10000"}
+		machineState = {"FCV301" : "1", "V201a" : "0", "V201b" :"0", "V301" : "0", "V302" : "0", "heya" : "1", "FL301" : "10000"}		
+		handshakes = {"FCV301" : "1", "V201a" : "1", "V201b" :"1", "V301" : "1", "V302" : "1", "heya" : "1"}
 
 	
 	outcome = flow1.doNextStepInFlowChart()
 	print outcome + str(times)
-	time.sleep(2)
+	time.sleep(20)
 	
 	
 	
