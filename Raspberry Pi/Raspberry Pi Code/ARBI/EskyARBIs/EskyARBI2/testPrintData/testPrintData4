@@ -1,0 +1,335 @@
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished1
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished2
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 1
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished3
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished4
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished5
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 3
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished6
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 4
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished7
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 4
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished8
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 5
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished9
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 6
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished10
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 7
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished11
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 7
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished12
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 8
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished13
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 9
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished14
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 9
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished15
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 10
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished16
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 11
+self.flowConditionOutcome: Yes
+self.taskStep: 2
+self.taskStepComponentData: {'P101': 'X', 'P103': 'OpenClose_1', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P103']
+Msg send to Arduino: P103 OpenClose_1
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished17
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished18
+Coms serial receive data:
+1_P103_OpenClose_1
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 1
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished19
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: Yes
+self.taskStep: 3
+self.taskStepComponentData: {'P101': 'OpenClose_1', 'P103': 'OpenClose_0', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101', 'P103']
+Msg send to Arduino: P101 OpenClose_1
+handshakes[self.componentID]: 1
+Msg send to Arduino: P103 OpenClose_0
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished20
+Coms serial receive data:
+
+
+
+ConditionType: stateCheck
+self.componentsToStateCheck: ['P101', 'P103']
+self.componentsDesiredStates: ['1', '0']
+self.componentID: P101
+machineState[self.componentID]: 1
+self.componentID: P103
+machineState[self.componentID]: 0
+self.componentsStateCheckOutcomes: {'P101': 1, 'P103': 1}
+self.flowConditionOutcome: Yes
+self.taskStep: 4
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': 'OpenClose_1'}
+self.componentsToSendInformationFor: ['P102']
+Msg send to Arduino: P102 OpenClose_1
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished21
+Coms serial receive data:
+1_P101_OpenClose_1
+1_P103_OpenClose_0
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished22
+Coms serial receive data:
+1_P102_OpenClose_1
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 1
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished23
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: Yes
+self.taskStep: 5
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': 'OpenClose_0'}
+self.componentsToSendInformationFor: ['P102']
+Msg send to Arduino: P102 OpenClose_0
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished24
+Coms serial receive data:
+
+
+
+ConditionType: stateCheck
+self.componentsToStateCheck: ['P102']
+self.componentsDesiredStates: ['0']
+self.componentID: P102
+machineState[self.componentID]: 0
+self.componentsStateCheckOutcomes: {'P102': 1}
+self.flowConditionOutcome: Yes
+self.taskStep: 6
+self.taskStepComponentData: {'P101': 'OpenClose_1', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+Msg send to Arduino: P101 OpenClose_1
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished25
+Coms serial receive data:
+1_P102_OpenClose_0
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished26
+Coms serial receive data:
+1_P101_OpenClose_1
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 1
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished27
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: Yes
+self.taskStep: 7
+self.taskStepComponentData: {'P101': 'OpenClose_0', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+Msg send to Arduino: P101 OpenClose_0
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Finished28
+Coms serial receive data:
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished29
+Coms serial receive data:
+1_P101_OpenClose_0
+

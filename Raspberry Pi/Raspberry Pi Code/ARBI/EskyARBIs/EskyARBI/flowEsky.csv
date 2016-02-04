@@ -1,0 +1,7 @@
+Flow,ConditionType,ConditionDescription,ConditionValue,YesOperation,YesParameter,YesNextStepInThisFlowChart,NoOperation,NoParameter,NoNextStepInThisFlowChart,Description
+1,HasTimePassed,EskyLastStartup,120,OutputValues,2,2,GoToAStepInThisFlowChart,X,1,Every 2 hours initiate this task. Start Pumping out rotifers.
+2,HasTimePassed,EskySincePreviousYes,1,OutputValues,3,3,GoToAStepInThisFlowChart,X,2,Stop rotifer pump after pumping 40mL (assume it's about 40mL/min)
+3,StateCheck,P103,0,OutputValues,4,4,GoToAStepInThisFlowChart,X,3,After Rotifer pump has been checked it's off. Turn on Algae pump
+4,HasTimePassed,EskySincePreviousYes,1,OutputValues,5,5,GoToAStepInThisFlowChart,X,4,Turn off algae pump
+5,StateCheck,P102,0,OutputValues,6,6,GoToAStepInThisFlowChart,X,5,Turn on NW pump
+6,HasTimePassed,EskySincePreviousYes,1,OutputValues,7,Finished,GoToAStepInThisFlowChart,X,6,Turn off NW pump

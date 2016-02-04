@@ -1,0 +1,1 @@
+{'LEDON': '', 'FLASHSTATUS': '', 'BLED2': '', 'BLED3': '', 'BLED1': '', 'InsideTemp': '', 'LEDOFF': '', 'RLED2': '', 'RLED3': '', 'WaterTemp': '', 'RLED1': ''}

@@ -1,0 +1,8 @@
+Step,P101,P102,P103
+1,OpenClose_0,OpenClose_0,OpenClose_0
+2,X,X,OpenClose_1
+3,X,X,OpenClose_0
+4,X,OpenClose_1,X
+5,X,OpenClose_0,X
+6,OpenClose_1,X,X
+7,OpenClose_0,x,X
