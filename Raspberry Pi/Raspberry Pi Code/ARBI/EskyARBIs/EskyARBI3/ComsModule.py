@@ -62,10 +62,12 @@ class ComsClass(object):
 	def serialSort(self, line):
 		
 		print "line: " + str(line)
-		
-		if globalvars.updateHandshakesFromComs == True:
-			if line.split("_")[0] == "1":
-				globalvars.handshakes[line.split("_")[1]] = line.split("_")[2]
+
+		if line.split("_")[0] == "1":
+			globalvars.handshakes[line.split("_")[1]] = line.split("_")[2]
+			globalvars.handshakeMsgReceived[line.split("_")[1]] = True
+			
+			print "globalvars.handshakeMsgReceived after setting in Coms: " + str(globalvars.handshakeMsgReceived)
 
 		if line.split("_")[0] == "2":
 			

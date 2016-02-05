@@ -12,7 +12,9 @@ int machineStates[2];
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(115200);
+  machineStates[0] = 0;
+  machineStates[1] = 0;
 
 }
 

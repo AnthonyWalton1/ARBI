@@ -14,4 +14,4 @@ GlobalComs = ComsModule.ComsClass()
 
 updateHandshakesFromComs = True
 
-handshakeMsgReceived = False
+handshakeMsgReceived = {"P101" : False, "P102" : False, "P103" : False}

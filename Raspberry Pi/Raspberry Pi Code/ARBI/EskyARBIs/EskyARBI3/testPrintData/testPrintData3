@@ -1,0 +1,289 @@
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished1
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished2
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 1
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished3
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished4
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished5
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 3
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished6
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 4
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished7
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 4
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished8
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 5
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished9
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 6
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished10
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 7
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished11
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 7
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished12
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 8
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished13
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 9
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished14
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 9
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished15
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 10
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished16
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 11
+self.flowConditionOutcome: Yes
+self.taskStep: 2
+self.taskStepComponentData: {'P101': 'X', 'P103': 'OpenClose_1', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P103']
+Msg send to Arduino: P103 OpenClose_1
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished17
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished18
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 1
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished19
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: Yes
+self.taskStep: 3
+self.taskStepComponentData: {'P101': 'OpenClose_1', 'P103': 'OpenClose_0', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101', 'P103']
+Msg send to Arduino: P101 OpenClose_1
+handshakes[self.componentID]: 1
+Msg send to Arduino: P103 OpenClose_0
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished20
+
+
+
+ConditionType: stateCheck
+self.componentsToStateCheck: ['P101', 'P103']
+self.componentsDesiredStates: ['1', '0']
+self.componentID: P101
+machineState[self.componentID]: 1
+self.componentID: P103
+machineState[self.componentID]: 0
+self.componentsStateCheckOutcomes: {'P101': 1, 'P103': 1}
+self.flowConditionOutcome: Yes
+self.taskStep: 4
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': 'OpenClose_1'}
+self.componentsToSendInformationFor: ['P102']
+Msg send to Arduino: P102 OpenClose_1
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished21
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished22
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 1
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished23
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: Yes
+self.taskStep: 5
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': 'OpenClose_0'}
+self.componentsToSendInformationFor: ['P102']
+Msg send to Arduino: P102 OpenClose_0
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished24
+
+
+
+ConditionType: stateCheck
+self.componentsToStateCheck: ['P102']
+self.componentsDesiredStates: ['0']
+self.componentID: P102
+machineState[self.componentID]: 0
+self.componentsStateCheckOutcomes: {'P102': 1}
+self.flowConditionOutcome: Yes
+self.taskStep: 6
+self.taskStepComponentData: {'P101': 'OpenClose_1', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+Msg send to Arduino: P101 OpenClose_1
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Not finished25
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished26
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 1
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Not finished27
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 2
+self.flowConditionOutcome: Yes
+self.taskStep: 7
+self.taskStepComponentData: {'P101': 'OpenClose_0', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+Msg send to Arduino: P101 OpenClose_0
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Finished28

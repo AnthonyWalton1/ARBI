@@ -14,7 +14,6 @@ class ProcessControllerClass(object):
 		self.componentsToSendInformationFor = []
 		self.waitingForHandshake = False
 		self.justStarted = True
-		self.turnUpdateHandshakesFromComsFlagOn = True
 
 
 
@@ -154,15 +153,22 @@ class ProcessControllerClass(object):
 		print "self.componentsToSendInformationFor: " + str(self.componentsToSendInformationFor) 
 		
 		for self.componentID in self.componentsToSendInformationFor:		
-			globalvars.GlobalComs.serialWrite("1_" + str(self.componentID) + "_" + str(self.taskStepComponentData[self.componentID]) + "\r\n")
-			print "Msg send to Arduino: " + "1_" + str(self.componentID) + "_" + str(self.taskStepComponentData[self.componentID]) + "\r\n"
+
+			print "globalvars.handshakeMsgReceived just before check: " + str(globalvars.handshakeMsgReceived)
+
+			if bool(globalvars.handshakeMsgReceived[self.componentID]) == False:
+				globalvars.GlobalComs.serialWrite("1_" + str(self.componentID) + "_" + str(self.taskStepComponentData[self.componentID]) + "\r\n")
+				print "Msg send to Arduino: " + "1_" + str(self.componentID) + "_" + str(self.taskStepComponentData[self.componentID]) + "\r\n"
+			else:
+				globalvars.handshakeMsgReceived[self.componentID] = False	
 		
 		print "handshakes just before comparison: " + str(globalvars.handshakes)
 
 		if all(globalvars.handshakes[self.componentID] == "1" for self.componentID in self.componentsToSendInformationFor):		
 			self.waitingForHandshake = False	
-			globalvars.handshakes[self.componentID] = "0"
-			globalvars.updateHandshakesFromComs = False			
+			
+			for self.componentID in self.componentsToSendInformationFor:	
+				globalvars.handshakes[self.componentID] = "0"		
 			return "Complete"
 		
 		else:
@@ -172,10 +178,6 @@ class ProcessControllerClass(object):
 	
 		
 	def doNextStepInFlowChart(self):
-		
-		if self.turnUpdateHandshakesFromComsFlagOn == True:
-			globalvars.updateHandshakesFromComs = True
-			self.turnUpdateHandshakesFromComsFlagOn = False
 		
 		if self.justStarted == True:
 			globalvars.timers["EskyLastStartup"] = globalfxns.millis()			
@@ -191,8 +193,6 @@ class ProcessControllerClass(object):
 		print "self.flowOperationOutcome: " + str(self.flowOperationOutcome)
 			
 		if self.flowOperationOutcome == "Complete":	
-			
-			self.turnUpdateHandshakesFromComsFlagOn = True
 			
 			if self.flowConditionOutcome == "Yes":			
 				self.nextStepInThisFlowChart = self.flowDictionary[self.flowChartStep]["YesNextStepInThisFlowChart"]
