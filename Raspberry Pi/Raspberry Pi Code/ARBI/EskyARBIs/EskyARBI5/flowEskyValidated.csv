@@ -1,0 +1,7 @@
+Flow,ConditionType,ConditionDescription,ConditionValue,YesOperation,YesParameter,YesNextStepInThisFlowChart,NoOperation,NoParameter,NoNextStepInThisFlowChart
+1,HasTimePassed,EskySinceLastStartup,120,OutputValues,2,2,GoToAStepInThisFlowChart,X,1
+2,HasTimePassed,EskySincePreviousYes,1,OutputValues,3,3,GoToAStepInThisFlowChart,X,2
+3,StateCheck,P101,0,OutputValues,4,4,GoToAStepInThisFlowChart,X,3
+4,HasTimePassed,EskySincePreviousYes,1,OutputValues,5,5,GoToAStepInThisFlowChart,X,4
+5,StateCheck,P102,0,OutputValues,6,6,GoToAStepInThisFlowChart,X,5
+6,HasTimePassed,EskySincePreviousYes,1,OutputValues,7,Finished,GoToAStepInThisFlowChart,X,6

@@ -1,0 +1,412 @@
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '', 'P103': '', 'P102': ''}
+Not finished1
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 7
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '0', 'P102': '0'}
+Not finished2
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 14
+self.flowConditionOutcome: Yes
+self.taskStep: 2
+self.taskStepComponentData: {'P101': 'X', 'P103': '1', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P103']
+Msg send to Arduino: 1_P103_1
+
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '0', 'P102': '0'}
+Repeating3
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 2
+self.taskStepComponentData: {'P101': 'X', 'P103': '1', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P103']
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 2_P103_0
+line: 1_P103_1
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '1', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '0', 'P102': '0'}
+Repeating4
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 2
+self.taskStepComponentData: {'P101': 'X', 'P103': '1', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P103']
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 2_P103_1
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '1', 'P102': '0'}
+Not finished5
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 7
+self.flowConditionOutcome: Yes
+self.taskStep: 3
+self.taskStepComponentData: {'P101': '1', 'P103': '0', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101', 'P103']
+Msg send to Arduino: 1_P101_1
+
+handshakes[self.componentID]: 0
+Msg send to Arduino: 1_P103_0
+
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 2_P103_1
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '1', 'P102': '0'}
+Repeating6
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 3
+self.taskStepComponentData: {'P101': '1', 'P103': '0', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101', 'P103']
+handshakes[self.componentID]: 0
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 1_P101_1
+line: 2_P103_1
+line: 1_P103_1
+End of coms serial receive data
+globalvars.handshakes: {'P101': '1', 'P103': '1', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '1', 'P102': '0'}
+Repeating7
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 3
+self.taskStepComponentData: {'P101': '1', 'P103': '0', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101', 'P103']
+handshakes[self.componentID]: 1
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+line: 2_P101_1_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '0'}
+Not finished8
+
+
+
+ConditionType: stateCheck
+self.componentsToStateCheck: ['P101', 'P103']
+self.componentsDesiredStates: ['1', '0']
+self.componentID: P101
+machineState[self.componentID]: 1
+self.componentID: P103
+machineState[self.componentID]: 0
+self.componentsStateCheckOutcomes: {'P101': 1, 'P103': 1}
+self.flowConditionOutcome: Yes
+self.taskStep: 4
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': '1'}
+self.componentsToSendInformationFor: ['P102']
+Msg send to Arduino: 1_P102_1
+
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_1_P102_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '0'}
+Repeating9
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 4
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': '1'}
+self.componentsToSendInformationFor: ['P102']
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_1_P102_0
+line: 1_P102_1
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '1'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '0'}
+Repeating10
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 4
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': '1'}
+self.componentsToSendInformationFor: ['P102']
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+line: 2_P101_1_P102_1
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '1'}
+Not finished11
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 7
+self.flowConditionOutcome: Yes
+self.taskStep: 5
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': '0'}
+self.componentsToSendInformationFor: ['P102']
+Msg send to Arduino: 1_P102_0
+
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_1_P102_1
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '1'}
+Repeating12
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 5
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': '0'}
+self.componentsToSendInformationFor: ['P102']
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_1_P102_1
+line: 1_P102_1
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '1'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '1'}
+Repeating13
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 5
+self.taskStepComponentData: {'P101': 'X', 'P103': 'X', 'P102': '0'}
+self.componentsToSendInformationFor: ['P102']
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+line: 2_P101_1_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '0'}
+Not finished14
+
+
+
+ConditionType: stateCheck
+self.componentsToStateCheck: ['P102']
+self.componentsDesiredStates: ['0']
+self.componentID: P102
+machineState[self.componentID]: 0
+self.componentsStateCheckOutcomes: {'P102': 1}
+self.flowConditionOutcome: Yes
+self.taskStep: 6
+self.taskStepComponentData: {'P101': '1', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+Msg send to Arduino: 1_P101_1
+
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_1_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '0'}
+Repeating15
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 6
+self.taskStepComponentData: {'P101': '1', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_1_P102_0
+line: 1_P101_1
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '1', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '0'}
+Repeating16
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 6
+self.taskStepComponentData: {'P101': '1', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+line: 2_P101_1_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '0'}
+Not finished17
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskySincePreviousYes
+timeElapsedSinceReferenceTime: 7
+self.flowConditionOutcome: Yes
+self.taskStep: 7
+self.taskStepComponentData: {'P101': '0', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+Msg send to Arduino: 1_P101_0
+
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_1_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '0'}
+Repeating18
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 7
+self.taskStepComponentData: {'P101': '0', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_1_P102_0
+line: 1_P101_1
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '1', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '1', 'P103': '0', 'P102': '0'}
+Repeating19
+
+
+
+self.flowConditionOutcome: Yes
+self.taskStep: 7
+self.taskStepComponentData: {'P101': '0', 'P103': 'X', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P101']
+handshakes[self.componentID]: 1
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '0', 'P102': '0'}
+Finished20
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 0
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '0', 'P102': '0'}
+Not finished21
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 7
+self.flowConditionOutcome: No
+self.flowOperationOutcome: Complete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '0', 'P102': '0'}
+Not finished22
+
+
+
+ConditionType: hasTimePassed
+referenceTimer: EskyLastStartup
+timeElapsedSinceReferenceTime: 14
+self.flowConditionOutcome: Yes
+self.taskStep: 2
+self.taskStepComponentData: {'P101': 'X', 'P103': '1', 'P102': 'X'}
+self.componentsToSendInformationFor: ['P103']
+Msg send to Arduino: 1_P103_1
+
+handshakes[self.componentID]: 0
+self.flowOperationOutcome: Incomplete
+Coms serial receive data:
+line: 2_P101_0_P102_0
+line: 2_P103_0
+End of coms serial receive data
+globalvars.handshakes: {'P101': '0', 'P103': '0', 'P102': '0'}
+globalvars.machineState: {'P101': '0', 'P103': '0', 'P102': '0'}
+Repeating23

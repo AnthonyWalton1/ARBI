@@ -1,2 +1,0 @@
-esky arbi 3 is working with additional features (one level up from Arbi 7) and UART working.
-Works with test csv files, not proper csv files.

@@ -50,7 +50,7 @@ def main():
 			globalvars.handshakes = {"FCV301" : "1", "V201a" : "1", "V201b" :"1", "V301" : "1", "V302" : "1", "heya" : "1"}
 
 		
-		outcome = ArbiAI.ArbiCSVFlowReader1.doNextStepInFlowChart()
+		outcome = ArbiAI.ArbiFeedAlgaeInterpreter.doNextStepInFlowChart()
 		print outcome + str(times)
 		
 		ArbiAI.status()

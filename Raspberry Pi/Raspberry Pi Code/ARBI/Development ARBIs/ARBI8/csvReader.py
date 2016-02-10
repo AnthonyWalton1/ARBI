@@ -11,7 +11,7 @@ class csvReaderclass(object):
 			
 	def csvReturnDict(self):
 		
-		self.csvFile = csv.DictReader(open(csvFilename))
+		self.csvFile = csv.DictReader(open(self.csvFilename))
 		self.csvDict = {}
 		
 		for self.row in self.csvFile:
